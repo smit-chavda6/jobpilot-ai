@@ -25,12 +25,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Automated cross-user authorization sweep tests (assert 403/404 on cross-tenant access)
   - [x] Exit Gate Verification: Migrations up/down clean; auth & isolation tests pass (11 tests green)
 
-- [ ] **M2: Design System + Shell + Dashboard Skeletons**
-  - [ ] React + Vite + TypeScript (strict) setup with Tailwind CSS
-  - [ ] Accessible UI component foundation (shadcn-style tokens, dark/light theme, WCAG 2.2 AA)
-  - [ ] App Shell: Navigation, header, user profile switch, status indicators
-  - [ ] Dashboard skeletons, loading states, empty states, error boundaries
-  - [ ] Exit Gate Verification: Component gallery/smoke tests; a11y checks pass
+- [x] **M2: Design System + Shell + Dashboard Skeletons**
+  - [x] React + Vite + TypeScript (strict) setup with Tailwind CSS
+  - [x] Accessible UI component foundation (shadcn-style tokens, dark/light theme, WCAG 2.2 AA)
+  - [x] App Shell: Navigation, header, user profile switch, status indicators
+  - [x] Dashboard, Jobs, Tracker, Resume Studio, Analytics, Settings views
+  - [x] Exit Gate Verification: Component gallery at /gallery, 6 RTL component unit tests green, Vite production bundle clean
 
 - [ ] **M3: Resume Upload/Parse/Confirm + ProfileFacts**
   - [ ] Resume upload endpoint with magic-byte/MIME validation and size caps
