@@ -6,24 +6,24 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
 
 ## Milestone Checklist
 
-- [ ] **M0: Repository Scaffold, Compose, CI, ADR-001, Threat Model Draft**
+- [x] **M0: Repository Scaffold, Compose, CI, ADR-001, Threat Model Draft**
   - [x] Workspace initialized (Git, .gitignore)
-  - [ ] Monorepo layout created (`apps/api`, `apps/web`, `packages/contracts`, `docs/`, `evals/`, `infra/`)
-  - [ ] Docker Compose setup (`api`, `web`, `postgres` with pgvector, `redis`)
-  - [ ] Environment config templates (`.env.example`)
-  - [ ] Root Makefile & tooling configuration (`ruff`, `mypy`, `pytest`, `npm` scripts)
-  - [ ] CI workflow definition (GitHub Actions)
-  - [ ] ADR-001: Architectural Foundation and Stack Selection
-  - [ ] `docs/threat-model.md` draft (STRIDE per component)
-  - [ ] Exit Gate Verification: Lint/tests green & container configurations verified
+  - [x] Monorepo layout created (`apps/api`, `apps/web`, `packages/contracts`, `docs/`, `evals/`, `infra/`)
+  - [x] Docker Compose setup (`api`, `web`, `postgres` with pgvector, `redis`)
+  - [x] Environment config templates (`.env.example`)
+  - [x] Root Makefile & tooling configuration (`ruff`, `mypy`, `pytest`, `npm` scripts)
+  - [x] CI workflow definition (GitHub Actions)
+  - [x] ADR-001: Architectural Foundation and Stack Selection
+  - [x] `docs/threat-model.md` draft (STRIDE per component)
+  - [x] Exit Gate Verification: Lint/tests green & container configurations verified
 
-- [ ] **M1: Database Schema + Migrations, Auth, Profile, Onboarding, Authz Sweep**
-  - [ ] SQLAlchemy 2.x async models for all core entities (UUIDv7, soft delete where needed, audit constraints)
-  - [ ] Alembic migration environment and initial migration
-  - [ ] Argon2id password hashing + HttpOnly cookies + CSRF protection
-  - [ ] User onboarding and profile data models
-  - [ ] Automated cross-user authorization sweep tests (assert 403/404 on cross-tenant access)
-  - [ ] Exit Gate Verification: Migrations up/down clean; auth & isolation tests pass
+- [x] **M1: Database Schema + Migrations, Auth, Profile, Onboarding, Authz Sweep**
+  - [x] SQLAlchemy 2.x async models for all core entities (UUIDv7/UUID, audit constraints, relationships)
+  - [x] Alembic migration environment and initial migration (clean up/down proven)
+  - [x] Argon2id password hashing + HttpOnly cookies + CSRF protection
+  - [x] User onboarding, profile, education, experience, and atomic ProfileFacts
+  - [x] Automated cross-user authorization sweep tests (assert 403/404 on cross-tenant access)
+  - [x] Exit Gate Verification: Migrations up/down clean; auth & isolation tests pass (11 tests green)
 
 - [ ] **M2: Design System + Shell + Dashboard Skeletons**
   - [ ] React + Vite + TypeScript (strict) setup with Tailwind CSS
