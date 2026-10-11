@@ -53,12 +53,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Eval dataset (>=50 labeled synthetic pairs) and metrics runner (precision@k, NDCG)
   - [x] Exit Gate Verification: Eval metrics pass; unknown-handling tests pass (18 tests green)
 
-- [ ] **M6: Resume Studio + Cover Letters + Grounding Validator + Export**
-  - [ ] Grounding validator (deterministic entity & quantifier check against confirmed `fact_id`s)
-  - [ ] LLM tailored resume & cover letter generation citing `fact_id`s
-  - [ ] Diff view with provenance annotations
-  - [ ] PDF and DOCX clean export generation
-  - [ ] Exit Gate Verification: Hallucination fixtures blocked; export files validate
+- [x] **M6: Resume Studio + Cover Letters + Grounding Validator + Export**
+  - [x] Grounding validator (deterministic entity & quantifier check against confirmed `fact_id`s)
+  - [x] LLM tailored resume & cover letter generation citing `fact_id`s
+  - [x] Diff view with provenance annotations
+  - [x] PDF and DOCX clean export generation (ReportLab & python-docx)
+  - [x] Exit Gate Verification: Hallucination fixtures blocked; export files validate (23 tests green)
 
 - [ ] **M7: Application Workflow + Approvals + Tracker + Reminders**
   - [ ] Orchestrator state machine for applications with strict transition guards
