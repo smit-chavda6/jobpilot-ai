@@ -11,6 +11,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from apps.api.config import settings
 from apps.api.logging_utils import setup_logging
+from apps.api.routers.applications import router as applications_router
 from apps.api.routers.auth import router as auth_router
 from apps.api.routers.facts import router as facts_router
 from apps.api.routers.jobs import router as jobs_router
@@ -129,3 +130,4 @@ app.include_router(facts_router)
 app.include_router(resumes_router)
 app.include_router(jobs_router)
 app.include_router(matching_router)
+app.include_router(applications_router)

@@ -60,13 +60,13 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] PDF and DOCX clean export generation (ReportLab & python-docx)
   - [x] Exit Gate Verification: Hallucination fixtures blocked; export files validate (23 tests green)
 
-- [ ] **M7: Application Workflow + Approvals + Tracker + Reminders**
-  - [ ] Orchestrator state machine for applications with strict transition guards
-  - [ ] ApprovalRecord cryptographic payload hashing (invalidates on change)
-  - [ ] Human confirmation requirement for final submission state
-  - [ ] Tracker views: Kanban + Table with keyboard accessibility and undo toasts
-  - [ ] Activity audit logs and reminder scheduler
-  - [ ] Exit Gate Verification: Cannot reach submitted without confirmation; duplicate-apply blocked
+- [x] **M7: Application Workflow + Approvals + Tracker + Reminders**
+  - [x] Orchestrator state machine for applications with strict transition guards
+  - [x] ApprovalRecord cryptographic payload hashing (invalidates on change)
+  - [x] Human confirmation requirement for final submission state
+  - [x] Tracker views: Kanban + Table with keyboard accessibility and undo toasts
+  - [x] Activity audit logs and reminder scheduler
+  - [x] Exit Gate Verification: Cannot reach submitted without confirmation; duplicate-apply blocked (27 tests green)
 
 - [ ] **M8: Email Triage, Interview Prep, Scam Signals, Analytics**
   - [ ] Uploaded .eml triage classifier generating suggested tracker updates
