@@ -32,12 +32,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Dashboard, Jobs, Tracker, Resume Studio, Analytics, Settings views
   - [x] Exit Gate Verification: Component gallery at /gallery, 6 RTL component unit tests green, Vite production bundle clean
 
-- [ ] **M3: Resume Upload/Parse/Confirm + ProfileFacts**
-  - [ ] Resume upload endpoint with magic-byte/MIME validation and size caps
-  - [ ] Resume parser (extracting education, experience, skills, projects)
-  - [ ] ProfileFact decomposition and verification lifecycle (`candidate` → `confirmed`)
-  - [ ] Frontend Resume Studio view for reviewing and confirming atomic facts
-  - [ ] Exit Gate Verification: Fixture resumes parse; unconfirmed facts unusable downstream
+- [x] **M3: Resume Upload/Parse/Confirm + ProfileFacts**
+  - [x] Resume upload endpoint with magic-byte/MIME validation and size caps
+  - [x] Resume parser (extracting raw text, skills, and section metadata)
+  - [x] ProfileFact decomposition and verification lifecycle (`candidate` → `confirmed`)
+  - [x] Frontend Resume Studio view for reviewing and confirming atomic facts
+  - [x] Exit Gate Verification: Fixture resumes parse; unconfirmed facts strictly unusable downstream (verified by test)
 
 - [ ] **M4: Job Import, Source Adapters, Dedup, Freshness**
   - [ ] JobSourceAdapter protocol and Compliance Registry (`docs/sources.md`)
