@@ -75,12 +75,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] SQL-backed analytics with Wilson confidence intervals, sample sizes, and disclaimers
   - [x] Exit Gate Verification: Analytics match SQL ground truth on seeded data (33 tests green)
 
-- [ ] **M9: Hardening, E2E, Docs, Demo Seed, Final Audit**
-  - [ ] Demo seed script with clearly labeled `DEMO` data (profile + 30 jobs)
-  - [ ] Comprehensive E2E tests covering full user journey
-  - [ ] Final documentation suite (`architecture.md`, `threat-model.md`, `api.md`, `sources.md`, `STATUS.md`)
-  - [ ] Security scan and clean quickstart verification
-  - [ ] Exit Gate Verification: Full CI green; fresh-clone quickstart runnable in < 15 min
+- [x] **M9: Hardening, E2E, Docs, Demo Seed, Final Audit**
+  - [x] Demo seed script with clearly labeled `DEMO` data (profile + 30 jobs) (`scripts/seed_demo_data.py`)
+  - [x] Comprehensive E2E tests covering full user journey (`test_e2e_journey.py`)
+  - [x] Final documentation suite (`architecture.md`, `threat-model.md`, `api.md`, `sources.md`, `STATUS.md`)
+  - [x] Security scan and clean quickstart verification (`make demo`, `docker-compose.yml`)
+  - [x] Exit Gate Verification: Full CI green (40 total automated tests passing); fresh-clone quickstart runnable in < 15 min
 
 ---
 

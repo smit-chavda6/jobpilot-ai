@@ -21,7 +21,10 @@ e2e:
 	cd apps/web && npx playwright test
 
 seed:
-	python -m apps.api.scripts.seed
+	python scripts/seed_demo_data.py
+
+demo: seed
+	@echo "Demo seed complete. Persona: Elena Rostova (demo@jobpilot.ai / Password123!)"
 
 migrate:
 	alembic -c apps/api/alembic.ini upgrade head

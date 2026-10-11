@@ -67,7 +67,7 @@ async def check_job_scam_signals(
     session: AsyncSession = Depends(get_db_session),
 ):
     job_repo = JobRepository(session)
-    job = await job_repo.get_by_id(job_id)
+    job = await job_repo.get_by_id(current_user.id, job_id)
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
 
@@ -92,7 +92,7 @@ async def get_interview_prep(
     job_repo = JobRepository(session)
     fact_repo = FactRepository(session)
 
-    job = await job_repo.get_by_id(job_id)
+    job = await job_repo.get_by_id(current_user.id, job_id)
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
 

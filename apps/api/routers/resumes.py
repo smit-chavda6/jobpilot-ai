@@ -144,7 +144,7 @@ async def tailor_resume(
     if not resume:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resume not found")
 
-    job = await job_repo.get_by_id(req.target_job_id)
+    job = await job_repo.get_by_id(current_user.id, req.target_job_id)
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Target job not found")
 
@@ -156,6 +156,7 @@ async def tailor_resume(
         )
 
     cand_name = current_user.email.split("@")[0].title()
+    service = ResumeTailorService()
     tailored_result = service.tailor_resume(
         resume=resume,
         job=job,
@@ -227,7 +228,7 @@ async def generate_cover_letter(
     job_repo = JobRepository(session)
     fact_repo = FactRepository(session)
 
-    job = await job_repo.get_by_id(req.target_job_id)
+    job = await job_repo.get_by_id(current_user.id, req.target_job_id)
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Target job not found")
 
