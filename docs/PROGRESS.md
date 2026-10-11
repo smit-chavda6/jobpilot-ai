@@ -46,12 +46,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Cryptographic SHA-256 fingerprinting pipeline and idempotent dedup
   - [x] Exit Gate Verification: Dedup & SSRF test suite passed; idempotent re-import proven (16 tests green)
 
-- [ ] **M5: Matching Engine + Explanations + Eval Harness**
-  - [ ] Two-stage matching: Deterministic hard filters + weighted scoring (0–100)
-  - [ ] Separate confidence metric and unknown handling
-  - [ ] Structured explanation payload (`fit_reasons`, `matched_skills`, `missing_or_uncertain`, etc.)
-  - [ ] Eval dataset (>=50 labeled synthetic pairs) and metrics runner (precision@k, NDCG)
-  - [ ] Exit Gate Verification: Eval metrics pass; unknown-handling tests pass
+- [x] **M5: Matching Engine + Explanations + Eval Harness**
+  - [x] Two-stage matching: Deterministic hard filters + weighted scoring (0–100)
+  - [x] Separate confidence metric and unknown handling
+  - [x] Structured explanation payload (`fit_reasons`, `matched_skills`, `missing_or_uncertain`, etc.)
+  - [x] Eval dataset (>=50 labeled synthetic pairs) and metrics runner (precision@k, NDCG)
+  - [x] Exit Gate Verification: Eval metrics pass; unknown-handling tests pass (18 tests green)
 
 - [ ] **M6: Resume Studio + Cover Letters + Grounding Validator + Export**
   - [ ] Grounding validator (deterministic entity & quantifier check against confirmed `fact_id`s)

@@ -1,0 +1,1452 @@
+[
+  {
+    "id": "eval-pair-001",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-002",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Lead Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-003",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 2,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-004",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 2,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Lead AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-005",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-006",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Lead Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-007",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 2,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-008",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 2,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Lead Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-009",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-010",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 160000,
+    "job_title": "Lead Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-011",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-012",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Lead Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-013",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-014",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Lead AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-015",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-016",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Lead Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-017",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-018",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Lead Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-019",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-020",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes",
+      "AWS",
+      "CUDA",
+      "Docker"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 180000,
+    "job_title": "Lead Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-021",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-022",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Lead Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-023",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-024",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Lead AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-025",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-026",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 3,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Lead Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-027",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-028",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Lead Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-029",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-030",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind",
+      "Node.js"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 150000,
+    "job_title": "Lead Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-031",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-032",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Lead Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-033",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-034",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Lead AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-035",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-036",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Lead Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-037",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-038",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Lead Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-039",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-040",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "candidate_remote": "remote",
+    "candidate_min_salary": 80000,
+    "job_title": "Lead Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-041",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-042",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Lead Senior Backend Engineer",
+    "job_company": "Stripe",
+    "job_required_skills": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 170000,
+    "job_salary_max": 210000
+  },
+  {
+    "id": "eval-pair-043",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-044",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Lead AI Infrastructure Engineer",
+    "job_company": "Anthropic",
+    "job_required_skills": [
+      "Python",
+      "PyTorch",
+      "Kubernetes"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "CUDA"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 190000,
+    "job_salary_max": 250000
+  },
+  {
+    "id": "eval-pair-045",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-046",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Lead Full Stack Engineer",
+    "job_company": "Vercel",
+    "job_required_skills": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js"
+    ],
+    "job_preferred_skills": [
+      "Tailwind",
+      "GraphQL"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 160000,
+    "job_salary_max": 200000
+  },
+  {
+    "id": "eval-pair-047",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-048",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 0,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Lead Data Platform Engineer",
+    "job_company": "Snowflake",
+    "job_required_skills": [
+      "Python",
+      "SQL",
+      "Kafka",
+      "PostgreSQL"
+    ],
+    "job_preferred_skills": [
+      "Docker",
+      "Spark"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 175000,
+    "job_salary_max": 220000
+  },
+  {
+    "id": "eval-pair-049",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  },
+  {
+    "id": "eval-pair-050",
+    "label": "DEMO_EVAL_PAIR",
+    "ground_truth_relevance": 1,
+    "candidate_skills": [
+      "C",
+      "C++",
+      "Assembly",
+      "RTOS",
+      "Linux"
+    ],
+    "candidate_remote": "on-site",
+    "candidate_min_salary": 140000,
+    "job_title": "Lead Site Reliability Engineer",
+    "job_company": "Datadog",
+    "job_required_skills": [
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "Python"
+    ],
+    "job_preferred_skills": [
+      "AWS",
+      "Terraform"
+    ],
+    "job_remote_type": "remote",
+    "job_salary_min": 165000,
+    "job_salary_max": 205000
+  }
+]
