@@ -1,0 +1,23 @@
+
+Jane Doe
+Senior Distributed Systems & Backend Engineer
+San Francisco, CA | jane.doe@example.com
+
+SUMMARY
+Passionate engineer with 6+ years of experience designing high-throughput backend services using Python, FastAPI, and PostgreSQL.
+
+WORK EXPERIENCE
+Staff Backend Engineer | Stripe (2022 - Present)
+- Architected high-availability payment routing pipeline in Python and FastAPI handling 15,000 requests per second.
+- Led migration of legacy datastores to PostgreSQL and Redis cluster, decreasing p99 query latency by 35%.
+- Implemented automated CI/CD deployment pipelines on AWS and Docker.
+
+Senior Software Engineer | Datadog (2019 - 2022)
+- Built distributed telemetry ingestion pipeline processing 2TB daily log data with Kafka.
+- Mentored 4 junior engineers on distributed systems best practices.
+
+EDUCATION
+- Bachelor of Science in Computer Science, UC Berkeley, 2019. GPA: 3.8/4.0.
+
+SKILLS
+Python, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, AWS, Kafka, Linux, SQL

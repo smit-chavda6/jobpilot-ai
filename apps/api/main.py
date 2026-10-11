@@ -13,6 +13,7 @@ from apps.api.config import settings
 from apps.api.logging_utils import setup_logging
 from apps.api.routers.auth import router as auth_router
 from apps.api.routers.facts import router as facts_router
+from apps.api.routers.jobs import router as jobs_router
 from apps.api.routers.profile import router as profile_router
 from apps.api.routers.resumes import router as resumes_router
 
@@ -125,3 +126,4 @@ app.include_router(auth_router)
 app.include_router(profile_router)
 app.include_router(facts_router)
 app.include_router(resumes_router)
+app.include_router(jobs_router)

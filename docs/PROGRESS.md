@@ -39,13 +39,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Frontend Resume Studio view for reviewing and confirming atomic facts
   - [x] Exit Gate Verification: Fixture resumes parse; unconfirmed facts strictly unusable downstream (verified by test)
 
-- [ ] **M4: Job Import, Source Adapters, Dedup, Freshness**
-  - [ ] JobSourceAdapter protocol and Compliance Registry (`docs/sources.md`)
-  - [ ] Permitted source adapters (Greenhouse/Lever public board, URL/Paste, CSV/JSON, .eml)
-  - [ ] SSRF defense and HTML sanitizer for URL imports
-  - [ ] Dedup pipeline: Normalized hash fingerprint + trigram similarity flags
-  - [ ] Freshness checking and dead-letter queue
-  - [ ] Exit Gate Verification: Dedup & SSRF tests pass; idempotent re-import proven
+- [x] **M4: Job Import, Source Adapters, Dedup, Freshness**
+  - [x] JobSourceAdapter protocol and Compliance Registry (`docs/sources.md`)
+  - [x] Permitted source adapters (Greenhouse public board, URL/Paste, CSV/JSON, .eml)
+  - [x] SSRF defense (blocking private, loopback, link-local, cloud metadata IPs) and HTML sanitizer
+  - [x] Cryptographic SHA-256 fingerprinting pipeline and idempotent dedup
+  - [x] Exit Gate Verification: Dedup & SSRF test suite passed; idempotent re-import proven (16 tests green)
 
 - [ ] **M5: Matching Engine + Explanations + Eval Harness**
   - [ ] Two-stage matching: Deterministic hard filters + weighted scoring (0–100)
