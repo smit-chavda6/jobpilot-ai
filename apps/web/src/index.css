@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 98%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 20% 15%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 10% 46%;
+    --accent: 243 75% 95%;
+    --accent-foreground: 243 75% 45%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 243 75% 59%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 224 35% 8%;
+    --foreground: 210 20% 98%;
+    --card: 224 30% 12%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 30% 12%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 243 85% 68%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 224 25% 18%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 224 25% 18%;
+    --muted-foreground: 217 19% 65%;
+    --accent: 243 45% 25%;
+    --accent-foreground: 243 85% 85%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 224 25% 20%;
+    --input: 224 25% 20%;
+    --ring: 243 85% 68%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  code, pre, kbd {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-card {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+}

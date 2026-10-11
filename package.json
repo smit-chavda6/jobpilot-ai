@@ -1,0 +1,12 @@
+{
+  "name": "jobpilot-ai-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JobPilot AI - Compliance-first, human-in-the-loop AI job search assistant",
+  "scripts": {
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run build",
+    "web:test": "npm --prefix apps/web run test",
+    "web:lint": "npm --prefix apps/web run lint"
+  }
+}
