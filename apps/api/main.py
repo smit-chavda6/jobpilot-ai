@@ -18,6 +18,7 @@ from apps.api.routers.jobs import router as jobs_router
 from apps.api.routers.matching import router as matching_router
 from apps.api.routers.profile import router as profile_router
 from apps.api.routers.resumes import router as resumes_router
+from apps.api.routers.triage_and_analytics import router as triage_router
 
 setup_logging(settings.LOG_LEVEL)
 
@@ -131,3 +132,4 @@ app.include_router(resumes_router)
 app.include_router(jobs_router)
 app.include_router(matching_router)
 app.include_router(applications_router)
+app.include_router(triage_router)

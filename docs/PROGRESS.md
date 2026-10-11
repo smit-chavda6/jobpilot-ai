@@ -68,12 +68,12 @@ This document tracks progress against the milestones defined in `jobpilot-ai-adv
   - [x] Activity audit logs and reminder scheduler
   - [x] Exit Gate Verification: Cannot reach submitted without confirmation; duplicate-apply blocked (27 tests green)
 
-- [ ] **M8: Email Triage, Interview Prep, Scam Signals, Analytics**
-  - [ ] Uploaded .eml triage classifier generating suggested tracker updates
-  - [ ] Interview prep question bank and STAR-format answer scaffolds from verified facts
-  - [ ] Probabilistic scam/quality signal engine with transparent evidence
-  - [ ] SQL-backed analytics with Wilson confidence intervals, sample sizes, and disclaimers
-  - [ ] Exit Gate Verification: Analytics match SQL ground truth on seeded data
+- [x] **M8: Email Triage, Interview Prep, Scam Signals, Analytics**
+  - [x] Uploaded .eml triage classifier generating suggested tracker updates
+  - [x] Interview prep question bank and STAR-format answer scaffolds from verified facts
+  - [x] Probabilistic scam/quality signal engine with transparent evidence
+  - [x] SQL-backed analytics with Wilson confidence intervals, sample sizes, and disclaimers
+  - [x] Exit Gate Verification: Analytics match SQL ground truth on seeded data (33 tests green)
 
 - [ ] **M9: Hardening, E2E, Docs, Demo Seed, Final Audit**
   - [ ] Demo seed script with clearly labeled `DEMO` data (profile + 30 jobs)
