@@ -3,7 +3,6 @@ victim's resource IDs, must return 403/404 and must not change or leak the victi
 
 import re
 
-from fastapi.routing import APIRoute
 from sqlalchemy import select
 
 from app.db import get_sessionmaker
@@ -26,7 +25,21 @@ PUBLIC = {
     "/api/healthz",
     "/api/readyz",
 }
-NOT_OWNED_PARAMS = {"source"}  # import source id and adapter id are global registry keys, not user resources
+NOT_OWNED_PARAMS = {"source"}
+HTTP_METHODS = {"get", "post", "put", "patch", "delete"}
+
+
+def operations() -> list[tuple[str, str]]:
+    """(METHOD, path) for every endpoint, taken from the public OpenAPI schema.
+
+    FastAPI >= 0.13x nests included routers in `app.routes`, so iterating routes directly silently
+    finds nothing; the schema is the stable, public view of every exposed operation.
+    """
+    paths = create_app().openapi()["paths"]
+    return [
+        (m.upper(), path) for path, ops in paths.items() for m in ops if m in HTTP_METHODS
+    ]  # import source id and adapter id are global registry keys, not user resources
+
 
 BODIES: dict[tuple[str, str], object] = {
     ("POST", "/api/jobs/{job_id}/scam-feedback"): {"signal_code": "upfront_fee"},
@@ -93,28 +106,27 @@ async def test_cross_tenant_sweep(api: Api, make_api) -> None:  # type: ignore[n
     await attacker.post("/api/auth/reauth", {"password": "Sup3rSecurePass"})
 
     checked = 0
-    for route in create_app().routes:
-        if not isinstance(route, APIRoute) or "{" not in route.path:
+    for method, path in operations():
+        if "{" not in path:
             continue
-        params = re.findall(r"{(\w+)}", route.path)
-        if set(params) & NOT_OWNED_PARAMS or route.path == "/api/sources/{source_id}":
+        params = re.findall(r"{(\w+)}", path)
+        if set(params) & NOT_OWNED_PARAMS or path == "/api/sources/{source_id}":
             continue
-        url = route.path
+        url = path
         for p in params:
             url = url.replace("{" + p + "}", ids[p])
-        for method in route.methods - {"HEAD", "OPTIONS"}:
-            body = BODIES.get((method, route.path))
-            if method == "GET":
-                r = await attacker.get(url)
-            elif method == "DELETE":
-                r = await attacker.delete(url)
-            else:
-                r = await attacker.c.request(method, url, json=body, headers={"X-CSRF-Token": attacker.csrf})
-            assert r.status_code in (403, 404), (method, route.path, r.status_code, r.text[:200])
-            for v in ids.values():
-                if v != "greenhouse":
-                    assert v not in r.text, (method, route.path, "leaked id")
-            checked += 1
+        body = BODIES.get((method, path))
+        if method == "GET":
+            r = await attacker.get(url)
+        elif method == "DELETE":
+            r = await attacker.delete(url)
+        else:
+            r = await attacker.c.request(method, url, json=body, headers={"X-CSRF-Token": attacker.csrf})
+        assert r.status_code in (403, 404), (method, path, r.status_code, r.text[:200])
+        for v in ids.values():
+            if v != "greenhouse":
+                assert v not in r.text, (method, path, "leaked id")
+        checked += 1
     assert checked >= 30
 
     # IDs smuggled through bodies / query strings
@@ -143,13 +155,15 @@ async def test_cross_tenant_sweep(api: Api, make_api) -> None:  # type: ignore[n
 
 
 async def test_every_private_route_requires_auth(anon: Api) -> None:
-    for route in create_app().routes:
-        if not isinstance(route, APIRoute) or route.path in PUBLIC or not route.path.startswith("/api"):
+    checked = 0
+    for method, path in operations():
+        if path in PUBLIC or not path.startswith("/api"):
             continue
-        url = re.sub(r"{\w+}", "00000000-0000-0000-0000-000000000000", route.path)
-        for method in route.methods - {"HEAD", "OPTIONS"}:
-            r = await anon.c.request(method, url, json={}, headers={"X-CSRF-Token": anon.csrf})
-            assert r.status_code in (401, 422), (method, route.path, r.status_code)
-            if r.status_code == 422:
-                # validation may run first, but a valid request must still be refused
-                assert r.json()["error"]["code"] == "validation_error"
+        url = re.sub(r"{\w+}", "00000000-0000-0000-0000-000000000000", path)
+        r = await anon.c.request(method, url, json={}, headers={"X-CSRF-Token": anon.csrf})
+        assert r.status_code in (401, 422), (method, path, r.status_code)
+        checked += 1
+        if r.status_code == 422:
+            # validation may run first, but a valid request must still be refused
+            assert r.json()["error"]["code"] == "validation_error"
+    assert checked >= 70
