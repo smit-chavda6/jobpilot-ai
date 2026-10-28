@@ -76,6 +76,7 @@ It passes against both a fresh local stack (SQLite, inline tasks) and the Docker
 - Scam signals are heuristics; false negatives are possible. The UI says so.
 - The matching evaluation uses a **synthetic** dataset whose tiers were constructed, so near-perfect scores say little about real-world ranking quality.
 - In-memory rate limits and the polling worker suit a single instance (personal scale).
+- `npm audit` reports one **moderate** advisory in React Router 6 (fixed only in v7, a breaking upgrade). CI fails on high or critical only. Plan the v7 migration.
 
 ## Verification commands and results
 
