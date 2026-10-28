@@ -1,138 +1,182 @@
-"""Generates 50 synthetic labeled pairs for matching evaluation harness."""
+"""Generate the SYNTHETIC matching evaluation dataset (clearly labelled; not real people or jobs).
+
+Relevance labels (0-3) are assigned from how each job was *constructed* relative to the profile,
+independently of the scoring engine:
+  3 = target title, required skills all held, experience/location fit
+  2 = related title, about half the required skills held
+  1 = few required skills held, or experience requirement far above the profile
+  0 = different field, or violates a hard constraint (blocked company / on-site outside preferences)
+
+Run: python evals/matching/generate_dataset.py  (writes dataset.json next to this file)
+"""
+
+from __future__ import annotations
 
 import json
-import os
+import random
+from pathlib import Path
 
-ROLES = [
-    {
-        "title": "Senior Backend Engineer",
-        "company": "Stripe",
-        "req": ["Python", "FastAPI", "PostgreSQL", "Redis"],
-        "pref": ["Docker", "Kubernetes"],
-        "sal_min": 170000,
-        "sal_max": 210000,
-        "remote": "remote",
-    },
-    {
-        "title": "AI Infrastructure Engineer",
-        "company": "Anthropic",
-        "req": ["Python", "PyTorch", "Kubernetes"],
-        "pref": ["AWS", "CUDA"],
-        "sal_min": 190000,
-        "sal_max": 250000,
-        "remote": "remote",
-    },
-    {
-        "title": "Full Stack Engineer",
-        "company": "Vercel",
-        "req": ["TypeScript", "React", "Next.js", "Node.js"],
-        "pref": ["Tailwind", "GraphQL"],
-        "sal_min": 160000,
-        "sal_max": 200000,
-        "remote": "remote",
-    },
-    {
-        "title": "Data Platform Engineer",
-        "company": "Snowflake",
-        "req": ["Python", "SQL", "Kafka", "PostgreSQL"],
-        "pref": ["Docker", "Spark"],
-        "sal_min": 175000,
-        "sal_max": 220000,
-        "remote": "remote",
-    },
-    {
-        "title": "Site Reliability Engineer",
-        "company": "Datadog",
-        "req": ["Linux", "Kubernetes", "Docker", "Python"],
-        "pref": ["AWS", "Terraform"],
-        "sal_min": 165000,
-        "sal_max": 205000,
-        "remote": "remote",
-    },
-]
+SEED = 20261028
 
-CANDIDATES = [
+PROFILES = [
     {
-        "name": "Python Distributed Expert",
-        "skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "Kubernetes"],
-        "remote": "remote",
-        "min_salary": 160000,
+        "id": "synthetic-profile-ds",
+        "label": "SYNTHETIC",
+        "skills": ["Python", "SQL", "Pandas", "scikit-learn", "XGBoost", "Statistics", "Tableau", "Airflow"],
+        "years_experience": 4,
+        "education_level": "master",
+        "target_titles": ["Data Scientist"],
+        "preferred_locations": ["Bengaluru"],
+        "remote_preference": "any",
+        "employment_types": ["full_time"],
+        "blocked_companies": ["Blocked Analytics"],
+        "title": "Data Scientist",
+        "related": "Data Analyst",
+        "family": ["PyTorch", "Spark", "Snowflake"],
+        "other_field": ("Frontend Engineer", ["React", "TypeScript", "CSS", "Figma"]),
     },
     {
-        "name": "AI/ML Systems Specialist",
-        "skills": ["Python", "PyTorch", "Kubernetes", "AWS", "CUDA", "Docker"],
-        "remote": "remote",
-        "min_salary": 180000,
+        "id": "synthetic-profile-be",
+        "label": "SYNTHETIC",
+        "skills": ["Java", "Spring", "PostgreSQL", "Kafka", "Docker", "Kubernetes", "AWS", "REST"],
+        "years_experience": 6,
+        "education_level": "bachelor",
+        "target_titles": ["Backend Engineer"],
+        "preferred_locations": ["Pune"],
+        "remote_preference": "any",
+        "employment_types": ["full_time"],
+        "blocked_companies": ["Blocked Systems"],
+        "title": "Backend Engineer",
+        "related": "Platform Engineer",
+        "family": ["Go", "Redis", "Terraform"],
+        "other_field": ("Data Scientist", ["Python", "scikit-learn", "Statistics", "Tableau"]),
     },
     {
-        "name": "Frontend / Full Stack Dev",
-        "skills": ["TypeScript", "React", "Next.js", "Tailwind", "Node.js"],
-        "remote": "remote",
-        "min_salary": 150000,
-    },
-    {
-        "name": "Junior Web Developer",
-        "skills": ["JavaScript", "HTML", "CSS", "Git"],
-        "remote": "remote",
-        "min_salary": 80000,
-    },
-    {
-        "name": "Embedded Systems Engineer",
-        "skills": ["C", "C++", "Assembly", "RTOS", "Linux"],
-        "remote": "on-site",
-        "min_salary": 140000,
+        "id": "synthetic-profile-fe",
+        "label": "SYNTHETIC",
+        "skills": ["JavaScript", "TypeScript", "React", "CSS", "HTML", "Next.js", "GraphQL", "Figma"],
+        "years_experience": 3,
+        "education_level": "bachelor",
+        "target_titles": ["Frontend Engineer"],
+        "preferred_locations": ["Remote", "Hyderabad"],
+        "remote_preference": "remote",
+        "employment_types": ["full_time"],
+        "blocked_companies": ["Blocked UI"],
+        "title": "Frontend Engineer",
+        "related": "Full Stack Engineer",
+        "family": ["Vue", "Angular", "Node.js"],
+        "other_field": ("Data Engineer", ["Spark", "Airflow", "Snowflake", "Kafka"]),
     },
 ]
 
 
-def generate_pairs():
-    pairs = []
-    pair_id = 1
-    for i, cand in enumerate(CANDIDATES):
-        for j, role in enumerate(ROLES):
-            for variant in [0, 1]:  # 2 variants per combination -> 5 * 5 * 2 = 50 pairs
-                cand_skills_set = set(s.lower() for s in cand["skills"])
-                role_req_set = set(s.lower() for s in role["req"])
-                overlap = len(cand_skills_set.intersection(role_req_set))
+def make_jobs(p: dict, rng: random.Random) -> list[dict]:  # type: ignore[type-arg]
+    skills = p["skills"]
+    loc = p["preferred_locations"][0]
+    jobs = []
+    for i in range(5):  # label 3
+        req = rng.sample(skills, 4)
+        jobs.append(
+            {
+                "label": 3,
+                "title": p["title"],
+                "company": f"SyntheticCo{i}",
+                "location": loc,
+                "remote_policy": "hybrid",
+                "employment_type": "full_time",
+                "min_years": max(1, p["years_experience"] - 1),
+                "required_skills": req,
+                "preferred_skills": rng.sample(skills, 2),
+            }
+        )
+    for i in range(5):  # label 2
+        req = rng.sample(skills, 2) + rng.sample(p["family"], 2)
+        jobs.append(
+            {
+                "label": 2,
+                "title": p["related"],
+                "company": f"SyntheticRel{i}",
+                "location": loc,
+                "remote_policy": "hybrid",
+                "employment_type": "full_time",
+                "min_years": p["years_experience"],
+                "required_skills": req,
+                "preferred_skills": rng.sample(p["family"], 1),
+            }
+        )
+    for i in range(5):  # label 1
+        req = rng.sample(skills, 1) + rng.sample(p["family"], 3)
+        jobs.append(
+            {
+                "label": 1,
+                "title": f"Senior {p['related']}",
+                "company": f"SyntheticStretch{i}",
+                "location": loc,
+                "remote_policy": "unknown",
+                "employment_type": "full_time",
+                "min_years": p["years_experience"] + 6,
+                "required_skills": req,
+                "preferred_skills": [],
+            }
+        )
+    other_title, other_skills = p["other_field"]
+    for i in range(3):  # label 0: different field
+        jobs.append(
+            {
+                "label": 0,
+                "title": other_title,
+                "company": f"SyntheticOther{i}",
+                "location": "Chennai",
+                "remote_policy": "onsite",
+                "employment_type": "full_time",
+                "min_years": 2,
+                "required_skills": rng.sample(other_skills, 3),
+                "preferred_skills": [],
+            }
+        )
+    jobs.append(
+        {
+            "label": 0,
+            "title": p["title"],
+            "company": p["blocked_companies"][0],
+            "location": loc,
+            "remote_policy": "hybrid",
+            "employment_type": "full_time",
+            "min_years": 2,
+            "required_skills": rng.sample(skills, 3),
+            "preferred_skills": [],
+        }
+    )
+    jobs.append(
+        {
+            "label": 0,
+            "title": p["title"],
+            "company": "SyntheticContract",
+            "location": "Kolkata",
+            "remote_policy": "onsite",
+            "employment_type": "contract",
+            "min_years": 2,
+            "required_skills": rng.sample(skills, 3),
+            "preferred_skills": [],
+        }
+    )
+    return jobs
 
-                # Compute ground truth relevance (3 = Excellent, 2 = Good, 1 = Fair, 0 = Ineligible/Poor)
-                if cand["remote"] == "remote" and role["remote"] == "on-site":
-                    relevance = 0
-                elif cand["min_salary"] > role["sal_max"]:
-                    relevance = 0
-                elif overlap >= 3:
-                    relevance = 3
-                elif overlap >= 2:
-                    relevance = 2
-                elif overlap >= 1:
-                    relevance = 1
-                else:
-                    relevance = 0
 
-                pairs.append(
-                    {
-                        "id": f"eval-pair-{pair_id:03d}",
-                        "label": "DEMO_EVAL_PAIR",
-                        "ground_truth_relevance": relevance,
-                        "candidate_skills": cand["skills"],
-                        "candidate_remote": cand["remote"],
-                        "candidate_min_salary": cand["min_salary"],
-                        "job_title": role["title"] if variant == 0 else f"Lead {role['title']}",
-                        "job_company": role["company"],
-                        "job_required_skills": role["req"],
-                        "job_preferred_skills": role["pref"],
-                        "job_remote_type": role["remote"],
-                        "job_salary_min": role["sal_min"],
-                        "job_salary_max": role["sal_max"],
-                    }
-                )
-                pair_id += 1
-    return pairs
+def main() -> None:
+    rng = random.Random(SEED)
+    out = {
+        "label": "SYNTHETIC - generated by generate_dataset.py; not real people or jobs",
+        "seed": SEED,
+        "profiles": [],
+    }
+    for p in PROFILES:
+        profile = {k: v for k, v in p.items() if k not in ("title", "related", "family", "other_field")}
+        out["profiles"].append({"profile": profile, "jobs": make_jobs(p, rng)})
+    path = Path(__file__).with_name("dataset.json")
+    path.write_text(json.dumps(out, indent=1))
+    print(f"wrote {sum(len(x['jobs']) for x in out['profiles'])} pairs to {path}")
 
 
 if __name__ == "__main__":
-    dataset = generate_pairs()
-    out_path = os.path.join(os.path.dirname(__file__), "dataset.json")
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(dataset, f, indent=2)
-    print(f"Generated {len(dataset)} evaluation pairs in {out_path}")
+    main()

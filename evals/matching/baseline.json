@@ -1,0 +1,7 @@
+{
+  "note": "Measured on the SYNTHETIC dataset (constructed tiers, so it is an easy benchmark). Tests fail if a metric drops more than `tolerance` below this baseline.",
+  "precision_at_5": 1.0,
+  "ndcg_at_10": 1.0,
+  "spearman": 0.998,
+  "tolerance": 0.05
+}

@@ -1,123 +1,93 @@
-"""Matching engine evaluation runner: Precision@K, NDCG, and Rank Correlation."""
+"""Matching eval runner: precision@5, NDCG@10 and Spearman rank correlation vs labels.
+
+Run from the repo root: apps/api/.venv/Scripts/python evals/matching/runner.py   (or `make eval`)
+"""
+
+from __future__ import annotations
 
 import json
 import math
-import os
-from typing import Dict, List, Tuple
+import sys
+from pathlib import Path
+from typing import Any
 
-from apps.api.services.matching_service import normalize_skill
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "apps" / "api"))
 
-
-def dcg_at_k(scores: List[float], k: int) -> float:
-    """Computes Discounted Cumulative Gain at rank k."""
-    dcg = 0.0
-    for i, s in enumerate(scores[:k]):
-        dcg += (2.0**s - 1.0) / math.log2(i + 2.0)
-    return dcg
+from app.services.matching import JobInput, ProfileInput, score_job  # noqa: E402
 
 
-def ndcg_at_k(predicted_scores: List[Tuple[float, float]], k: int = 10) -> float:
-    """
-    Computes Normalized Discounted Cumulative Gain at rank k.
-    predicted_scores: list of (predicted_model_score, ground_truth_relevance)
-    """
-    # Sort by predicted model score descending
-    ranked_by_pred = sorted(predicted_scores, key=lambda x: x[0], reverse=True)
-    actual_relevances = [item[1] for item in ranked_by_pred]
-    actual_dcg = dcg_at_k(actual_relevances, k)
-
-    # Ideal DCG sorted by ground truth relevance
-    ideal_relevances = sorted([item[1] for item in predicted_scores], reverse=True)
-    ideal_dcg = dcg_at_k(ideal_relevances, k)
-
-    if ideal_dcg == 0:
-        return 1.0
-    return actual_dcg / ideal_dcg
+def _ranks(values: list[float]) -> list[float]:
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    ranks = [0.0] * len(values)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            ranks[order[k]] = (i + j) / 2 + 1
+        i = j + 1
+    return ranks
 
 
-def precision_at_k(
-    predicted_scores: List[Tuple[float, float]], k: int = 10, threshold: float = 2.0
-) -> float:
-    """Computes Precision@K where relevant items have ground_truth_relevance >= threshold."""
-    ranked = sorted(predicted_scores, key=lambda x: x[0], reverse=True)[:k]
-    if not ranked:
-        return 0.0
-    relevant_count = sum(1 for _, gt in ranked if gt >= threshold)
-    return relevant_count / len(ranked)
+def spearman(x: list[float], y: list[float]) -> float:
+    rx, ry = _ranks(x), _ranks(y)
+    mx, my = sum(rx) / len(rx), sum(ry) / len(ry)
+    cov = sum((a - mx) * (b - my) for a, b in zip(rx, ry, strict=True))
+    vx = math.sqrt(sum((a - mx) ** 2 for a in rx))
+    vy = math.sqrt(sum((b - my) ** 2 for b in ry))
+    return cov / (vx * vy) if vx and vy else 0.0
 
 
-def spearman_rank_correlation(x: List[float], y: List[float]) -> float:
-    """Computes Spearman rank correlation coefficient between model scores and ground truth."""
-    n = len(x)
-    if n < 2:
-        return 1.0
+def ndcg(labels_in_rank_order: list[int], k: int) -> float:
+    def dcg(ls: list[int]) -> float:
+        return sum((2**rel - 1) / math.log2(i + 2) for i, rel in enumerate(ls[:k]))
 
-    def get_ranks(arr: List[float]) -> List[float]:
-        sorted_indices = sorted(range(n), key=lambda idx: arr[idx])
-        ranks = [0.0] * n
-        for rank, idx in enumerate(sorted_indices):
-            ranks[idx] = float(rank + 1)
-        return ranks
-
-    rank_x = get_ranks(x)
-    rank_y = get_ranks(y)
-
-    d_squared_sum = sum((rx - ry) ** 2 for rx, ry in zip(rank_x, rank_y))
-    rho = 1.0 - (6.0 * d_squared_sum) / (n * (n**2 - 1))
-    return round(rho, 4)
+    ideal = dcg(sorted(labels_in_rank_order, reverse=True))
+    return dcg(labels_in_rank_order) / ideal if ideal else 0.0
 
 
-def evaluate_matching_engine() -> Dict[str, float]:
-    """Runs the evaluation harness on the 50 synthetic labeled pairs."""
-    data_path = os.path.join(os.path.dirname(__file__), "dataset.json")
-    with open(data_path, "r", encoding="utf-8") as f:
-        dataset = json.load(f)
-
-    results: List[Tuple[float, float]] = []
-    preds: List[float] = []
-    ground_truths: List[float] = []
-
-    for item in dataset:
-        cand_skills = set(normalize_skill(s) for s in item["candidate_skills"])
-        req_skills = [normalize_skill(s) for s in item["job_required_skills"]]
-        pref_skills = [normalize_skill(s) for s in item["job_preferred_skills"]]
-
-        matched_req = sum(1 for s in req_skills if s in cand_skills)
-        matched_pref = sum(1 for s in pref_skills if s in cand_skills)
-
-        # Re-create deterministic score computation
-        req_score = (matched_req / (len(req_skills) or 1)) * 100
-        pref_score = (matched_pref / (len(pref_skills) or 1)) * 100 if pref_skills else 100
-        skills_score = (req_score * 0.7) + (pref_score * 0.3)
-
-        # Hard filters check
-        if item["candidate_remote"] == "remote" and item["job_remote_type"] == "on-site":
-            predicted_score = 0.0
-        elif item["candidate_min_salary"] > item["job_salary_max"]:
-            predicted_score = 0.0
-        else:
-            predicted_score = (skills_score * 0.5) + 40.0
-
-        gt = float(item["ground_truth_relevance"])
-        results.append((predicted_score, gt))
-        preds.append(predicted_score)
-        ground_truths.append(gt)
-
-    ndcg = round(ndcg_at_k(results, k=10), 4)
-    prec_10 = round(precision_at_k(results, k=10, threshold=2.0), 4)
-    spearman = spearman_rank_correlation(preds, ground_truths)
-
-    metrics = {
-        "dataset_size": len(dataset),
-        "ndcg_at_10": ndcg,
-        "precision_at_10": prec_10,
-        "spearman_correlation": spearman,
+def evaluate(dataset_path: Path) -> dict[str, Any]:
+    data = json.loads(Path(dataset_path).read_text())
+    p_at_5, ndcgs, rhos, pairs = [], [], [], 0
+    for block in data["profiles"]:
+        pr = block["profile"]
+        profile = ProfileInput(
+            skills=set(pr["skills"]),
+            years_experience=pr["years_experience"],
+            education_level=pr["education_level"],
+            target_titles=pr["target_titles"],
+            preferred_locations=pr["preferred_locations"],
+            remote_preference=pr["remote_preference"],
+            employment_types=pr["employment_types"],
+            blocked_companies=pr["blocked_companies"],
+        )
+        scored = []
+        for j in block["jobs"]:
+            job = JobInput(
+                title=j["title"],
+                company=j["company"],
+                location=j["location"],
+                remote_policy=j["remote_policy"],
+                employment_type=j["employment_type"],
+                min_years=j["min_years"],
+                required_skills=j["required_skills"],
+                preferred_skills=j["preferred_skills"],
+            )
+            scored.append((score_job(profile, job).score, j["label"]))
+            pairs += 1
+        ranked = sorted(scored, key=lambda s: -s[0])
+        p_at_5.append(sum(1 for _, lab in ranked[:5] if lab >= 2) / 5)
+        ndcgs.append(ndcg([lab for _, lab in ranked], 10))
+        rhos.append(spearman([s for s, _ in scored], [float(lab) for _, lab in scored]))
+    return {
+        "pairs": pairs,
+        "precision_at_5": round(sum(p_at_5) / len(p_at_5), 4),
+        "ndcg_at_10": round(sum(ndcgs) / len(ndcgs), 4),
+        "spearman": round(sum(rhos) / len(rhos), 4),
     }
-    return metrics
 
 
 if __name__ == "__main__":
-    report = evaluate_matching_engine()
-    print("=== Matching Engine Eval Report ===")
-    for k, v in report.items():
-        print(f"{k}: {v}")
+    metrics = evaluate(Path(__file__).with_name("dataset.json"))
+    print(json.dumps(metrics, indent=2))
