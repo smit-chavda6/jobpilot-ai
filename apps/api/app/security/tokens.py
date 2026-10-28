@@ -6,7 +6,6 @@ import hashlib
 import secrets
 import uuid
 from datetime import UTC, datetime, timedelta
-from typing import Any, cast
 
 import jwt
 
@@ -29,7 +28,7 @@ def create_access_token(user_id: uuid.UUID) -> str:
 
 def decode_access_token(token: str) -> uuid.UUID | None:
     try:
-        payload = cast(dict[str, Any], jwt.decode(token, get_settings().jwt_secret, algorithms=[ALGORITHM]))
+        payload = jwt.decode(token, get_settings().jwt_secret, algorithms=[ALGORITHM])
     except jwt.PyJWTError:
         return None
     if payload.get("typ") != "access":
