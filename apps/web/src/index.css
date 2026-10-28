@@ -2,75 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 220 20% 98%;
-    --foreground: 224 71% 4%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 243 75% 59%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14% 94%;
-    --secondary-foreground: 220 20% 15%;
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 10% 46%;
-    --accent: 243 75% 95%;
-    --accent-foreground: 243 75% 45%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
-    --ring: 243 75% 59%;
-    --radius: 0.75rem;
-  }
+/*
+ * Design tokens - the single source for color, radius and spacing rhythm.
+ * Colors are "R G B" triplets so Tailwind can apply alpha (see tailwind.config.js).
+ * Both themes meet WCAG AA contrast for text on bg/surface.
+ */
+:root {
+  --bg: 248 250 252;
+  --surface: 255 255 255;
+  --muted: 241 245 249;
+  --border: 226 232 240;
+  --fg: 15 23 42;
+  --subtle: 71 85 105;
+  --primary: 79 70 229;
+  --primary-fg: 255 255 255;
+  --success: 21 128 61;
+  --warning: 180 83 9;
+  --danger: 185 28 28;
+  --info: 3 105 161;
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  color-scheme: light;
+}
 
-  .dark {
-    --background: 224 35% 8%;
-    --foreground: 210 20% 98%;
-    --card: 224 30% 12%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 30% 12%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 243 85% 68%;
-    --primary-foreground: 224 71% 4%;
-    --secondary: 224 25% 18%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 224 25% 18%;
-    --muted-foreground: 217 19% 65%;
-    --accent: 243 45% 25%;
-    --accent-foreground: 243 85% 85%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 224 25% 20%;
-    --input: 224 25% 20%;
-    --ring: 243 85% 68%;
-  }
+.dark {
+  --bg: 2 6 23;
+  --surface: 15 23 42;
+  --muted: 30 41 59;
+  --border: 51 65 85;
+  --fg: 241 245 249;
+  --subtle: 148 163 184;
+  --primary: 129 140 248;
+  --primary-fg: 15 23 42;
+  --success: 74 222 128;
+  --warning: 251 191 36;
+  --danger: 248 113 113;
+  --info: 56 189 248;
+  color-scheme: dark;
+}
 
-  * {
-    @apply border-border;
-  }
+html,
+body,
+#root {
+  height: 100%;
+}
 
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  }
+body {
+  @apply bg-bg text-fg font-sans antialiased;
+}
 
-  code, pre, kbd {
-    font-family: 'JetBrains Mono', monospace;
+:focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+.sr-only-focusable:not(:focus) {
+  @apply sr-only;
 }
 
-.dark .glass-card {
-  background: rgba(18, 24, 38, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+/* Sanitised job description HTML (server-side allowlist via nh3). */
+.prose-job p {
+  @apply mb-2;
+}
+.prose-job ul,
+.prose-job ol {
+  @apply mb-2 ml-5 list-disc;
+}
+.prose-job a {
+  @apply text-primary underline;
 }
