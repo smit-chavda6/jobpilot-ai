@@ -1,0 +1,8 @@
+# Default gitleaks rules, minus deliberate fakes: test fixtures (fake API keys used by the
+# prompt-injection tests) and the dev-only placeholder secrets in .env.example.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and documented dev placeholders"
+paths = ['''apps/api/tests/''', '''\.env\.example''', '''apps/web/e2e/start-api\.mjs''', '''\.github/workflows/ci\.yml''']

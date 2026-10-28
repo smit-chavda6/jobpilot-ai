@@ -1,79 +1,86 @@
+# JobPilot AI - full stack: Postgres, API, background worker, web (nginx + SPA).
+# Quickstart: cp .env.example .env && docker compose up --build  ->  http://localhost:8080
+name: jobpilot
+
+x-api-env: &api-env
+  APP_ENV: ${APP_ENV:-development}
+  DATABASE_URL: postgresql+asyncpg://jobpilot:${POSTGRES_PASSWORD:-jobpilot}@postgres:5432/jobpilot
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY:?set ENCRYPTION_KEY in .env}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+  LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+  OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
+  AI_DAILY_TOKEN_BUDGET_PER_USER: ${AI_DAILY_TOKEN_BUDGET_PER_USER:-50000}
+  AI_DAILY_TOKEN_BUDGET_GLOBAL: ${AI_DAILY_TOKEN_BUDGET_GLOBAL:-1000000}
+  ANALYTICS_MIN_N: ${ANALYTICS_MIN_N:-20}
+  SOURCE_URL_FETCH_ENABLED: ${SOURCE_URL_FETCH_ENABLED:-true}
+  SOURCE_GREENHOUSE_ENABLED: ${SOURCE_GREENHOUSE_ENABLED:-true}
+  SOURCE_LEVER_ENABLED: ${SOURCE_LEVER_ENABLED:-true}
+  SOURCE_ASHBY_ENABLED: ${SOURCE_ASHBY_ENABLED:-true}
+  SOURCE_RSS_ENABLED: ${SOURCE_RSS_ENABLED:-true}
+  FETCH_USER_AGENT: ${FETCH_USER_AGENT:-JobPilotAI/1.0 (personal job-search assistant)}
+  UPLOAD_DIR: /data/uploads
+  INLINE_TASKS: "false"
+
 services:
   postgres:
-    image: pgvector/pgvector:pg16
-    container_name: jobpilot-postgres
-    restart: unless-stopped
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: jobpilot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: jobpilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jobpilot}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d jobpilot"]
+      test: ["CMD-SHELL", "pg_isready -U jobpilot -d jobpilot"]
       interval: 5s
       timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    container_name: jobpilot-redis
+      retries: 20
     restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
   api:
     build:
       context: .
-      dockerfile: infra/Dockerfile.api
-    container_name: jobpilot-api
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
-    environment:
-      ENVIRONMENT: production
-      DATABASE_URL: postgresql+asyncpg://postgres:postgrespassword@postgres:5432/jobpilot
-      REDIS_URL: redis://redis:6379/0
-      JWT_SECRET: ${JWT_SECRET:-production_secure_jwt_secret_must_be_over_32_characters}
-      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:-dGhpcy1pcy1hLTMyLWJ5dGUtc2VjcmV0LWtleS1mb3ItZGV2IQ==}
-      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      dockerfile: infra/docker/api.Dockerfile
+    environment: *api-env
+    volumes:
+      - uploads:/data/uploads
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    command: ["python", "-m", "app.worker"]
+    environment: *api-env
     volumes:
-      - uploads_data:/app/uploads
+      - uploads:/data/uploads
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')\""]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      disable: true
+    restart: unless-stopped
 
   web:
     build:
       context: .
-      dockerfile: infra/Dockerfile.web
-    container_name: jobpilot-web
-    restart: unless-stopped
+      dockerfile: infra/docker/web.Dockerfile
     ports:
-      - "5173:80"
+      - "${WEB_PORT:-8080}:8080"
     depends_on:
       api:
         condition: service_healthy
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
-  redis_data:
-  uploads_data:
+  pgdata:
+  uploads:

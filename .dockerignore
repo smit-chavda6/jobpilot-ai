@@ -1,0 +1,15 @@
+**/node_modules
+**/.venv
+**/__pycache__
+**/.mypy_cache
+**/.ruff_cache
+**/.pytest_cache
+**/.hypothesis
+**/dist
+**/var
+**/.coverage
+**/*.egg-info
+**/test-results
+**/playwright-report
+.git
+.env
