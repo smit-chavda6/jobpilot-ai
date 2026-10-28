@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
-import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router";
 import { z } from "zod";
 import { api, ApiError, errorMessage } from "@/api/client";
 import { Button, Card, Field, Input } from "@/components/ui";

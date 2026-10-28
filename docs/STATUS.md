@@ -76,7 +76,7 @@ It passes against both a fresh local stack (SQLite, inline tasks) and the Docker
 - Scam signals are heuristics; false negatives are possible. The UI says so.
 - The matching evaluation uses a **synthetic** dataset whose tiers were constructed, so near-perfect scores say little about real-world ranking quality.
 - In-memory rate limits and the polling worker suit a single instance (personal scale).
-- `npm audit` reports one **moderate** advisory in React Router 6 (fixed only in v7, a breaking upgrade). CI fails on high or critical only. Plan the v7 migration.
+- `npm audit --omit=dev` (what ships) reports 0 vulnerabilities. Dev-only tooling (Vite 6, Vitest 2, esbuild) still has **moderate** advisories, fixed only in newer major versions; they affect the local dev/test server, not the production build. CI fails on high or critical only.
 
 ## Verification commands and results
 

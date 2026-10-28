@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render } from "@testing-library/react";
 import type { ReactElement } from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import { vi } from "vitest";
 import { ToastProvider } from "@/components/Toast";
 
@@ -11,7 +11,7 @@ export function renderWithProviders(ui: ReactElement, route = "/") {
     qc,
     ...render(
       <QueryClientProvider client={qc}>
-        <MemoryRouter initialEntries={[route]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter initialEntries={[route]}>
           <ToastProvider>{ui}</ToastProvider>
         </MemoryRouter>
       </QueryClientProvider>,

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileText, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { api, errorMessage, newIdempotencyKey } from "@/api/client";
 import type { DocumentSummary } from "@/api/types";
 import { useToast } from "@/components/Toast";

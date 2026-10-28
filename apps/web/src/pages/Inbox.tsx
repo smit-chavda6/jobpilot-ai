@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { api, errorMessage } from "@/api/client";
 import type { ImportResult, TriageItem } from "@/api/types";
 import { ScamPanel } from "@/components/domain";

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { api, errorMessage } from "@/api/client";
 import type { Consents, Fact, Profile, ResumeUpload } from "@/api/types";
 import { FactReview } from "@/components/domain";

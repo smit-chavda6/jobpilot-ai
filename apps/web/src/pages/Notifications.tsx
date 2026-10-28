@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { api } from "@/api/client";
 import type { Notification } from "@/api/types";
 import { Badge, Button, Card, cn, EmptyState, PageHeader, QueryView } from "@/components/ui";

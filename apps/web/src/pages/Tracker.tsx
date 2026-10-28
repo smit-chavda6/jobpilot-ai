@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KanbanSquare, Table2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 import { api, errorMessage } from "@/api/client";
 import type { ApplicationsPage, ApplicationSummary, AppStatus } from "@/api/types";
 import { useToast } from "@/components/Toast";

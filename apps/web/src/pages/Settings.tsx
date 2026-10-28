@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { api, ApiError, errorMessage } from "@/api/client";
 import type { Consents, Settings as SettingsData } from "@/api/types";
 import { ReauthDialog } from "@/components/domain";

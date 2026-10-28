@@ -12,7 +12,7 @@ export default defineConfig({
   preview: { port: 4173, proxy: { "/api": { target: apiTarget } } },
   build: {
     rollupOptions: {
-      output: { manualChunks: { react: ["react", "react-dom", "react-router-dom"], charts: ["recharts"] } },
+      output: { manualChunks: { react: ["react", "react-dom", "react-router"], charts: ["recharts"] } },
     },
   },
   test: {

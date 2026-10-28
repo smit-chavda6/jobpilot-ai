@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, ArrowLeft, Bell, Check, CheckCircle2, ExternalLink, FileText, Lock, ShieldCheck, Sparkles, XCircle } from "lucide-react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import { api, ApiError, errorMessage, newIdempotencyKey } from "@/api/client";
 import type { ApplicationDetail, DocumentSummary, PreflightCheck, ScreeningAnswer } from "@/api/types";
 import { useToast } from "@/components/Toast";

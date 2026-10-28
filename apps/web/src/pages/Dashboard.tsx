@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Bell, Briefcase, CheckCircle2, FileQuestion, Inbox } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { api } from "@/api/client";
 import type { Dashboard as DashboardData } from "@/api/types";
 import { ActionBadge } from "@/components/domain";

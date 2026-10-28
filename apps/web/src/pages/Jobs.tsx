@@ -2,7 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tansta
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Archive, Bookmark, ExternalLink, Plus, RefreshCw, Save, ShieldAlert, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 import { api, errorMessage } from "@/api/client";
 import type { FailedImport, JobSummary, Page, SavedFilter } from "@/api/types";
 import { ActionBadge, ScorePill } from "@/components/domain";

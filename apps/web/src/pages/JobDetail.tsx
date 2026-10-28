@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink, RefreshCw, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router";
 import { api, ApiError, errorMessage, newIdempotencyKey } from "@/api/client";
 import type { ApplicationSummary, JobDetail as Job } from "@/api/types";
 import { ScamPanel, ScoreBreakdown } from "@/components/domain";
