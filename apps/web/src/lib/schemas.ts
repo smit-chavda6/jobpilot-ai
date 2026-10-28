@@ -50,5 +50,8 @@ export const preferencesSchema = z.object({
   experience_filter_mode: z.enum(["soft", "hard"]),
 });
 
-export type ProfileBasics = z.infer<typeof profileBasicsSchema>;
-export type Preferences = z.infer<typeof preferencesSchema>;
+// Coerced fields accept raw input (form strings) and produce typed output, so forms need both shapes.
+export type ProfileBasicsInput = z.input<typeof profileBasicsSchema>;
+export type ProfileBasics = z.output<typeof profileBasicsSchema>;
+export type PreferencesInput = z.input<typeof preferencesSchema>;
+export type Preferences = z.output<typeof preferencesSchema>;

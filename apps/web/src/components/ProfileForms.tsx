@@ -11,7 +11,9 @@ import {
   profileBasicsSchema,
   REMOTE_PREFS,
   type Preferences,
+  type PreferencesInput,
   type ProfileBasics,
+  type ProfileBasicsInput,
 } from "@/lib/schemas";
 import { useToast } from "./Toast";
 import { Button, Field, Input, Select } from "./ui";
@@ -41,7 +43,7 @@ export function BasicsForm({
 }) {
   const save = useSaveProfile();
   const toast = useToast();
-  const form = useForm<ProfileBasics>({
+  const form = useForm<ProfileBasicsInput, unknown, ProfileBasics>({
     resolver: zodResolver(profileBasicsSchema),
     defaultValues: {
       full_name: profile.full_name,
@@ -107,7 +109,7 @@ export function PreferencesForm({
 }) {
   const save = useSaveProfile();
   const toast = useToast();
-  const form = useForm<Preferences>({
+  const form = useForm<PreferencesInput, unknown, Preferences>({
     resolver: zodResolver(preferencesSchema),
     defaultValues: {
       target_titles: profile.target_titles.join(", "),
