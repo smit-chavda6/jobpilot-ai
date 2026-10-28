@@ -1,186 +1,202 @@
-# JobPilot AI — Complete REST API Specification
+# API reference
 
-This document provides a comprehensive inventory of all REST endpoints exposed by JobPilot AI API (`/api/v1`). All endpoints return standard HTTP status codes and consistent error envelopes.
+The machine-readable contract is **`packages/contracts/openapi.json`** (OpenAPI 3.1, exported from
+the running app with `make openapi`). Interactive docs are served at **`/api/docs`**.
 
----
+## Conventions
 
-## 1. System & Health
+| | |
+|---|---|
+| Auth | Session cookies (`jp_access` 15 min, `jp_refresh` 14 days, rotating). Call `GET /api/auth/csrf` first. |
+| CSRF | Every `POST/PUT/PATCH/DELETE` under `/api` must send `X-CSRF-Token` equal to the `jp_csrf` cookie. Otherwise `403 csrf_failed`. |
+| Errors | `{"error": {"code": "...", "message": "...", "details": ..., "request_id": "..."}}`. `X-Request-ID` is echoed on every response. |
+| Idempotency | `Idempotency-Key` header on job imports, `POST /api/applications`, `.../prepare` and `POST /api/documents`. A repeat with the same key and body replays the first response (`Idempotent-Replayed: true`); the same key with a different body returns `idempotency_mismatch`. |
+| Concurrency | `GET` profile, document and application return `ETag: W/"<version>"`. Send `If-Match` on `PATCH /api/profile`, `PUT /api/documents/{id}`, notes and moves; a stale version returns `412`. |
+| Pagination | `GET /api/jobs` and `GET /api/applications` return `{items, next_cursor}`; pass `cursor=` for the next page. |
+| Re-auth | Export, account deletion and integration changes need `POST /api/auth/reauth` within the last 5 minutes, or they return `403 reauth_required`. |
+| Rate limits | `429 rate_limited` with `details.retry_after_seconds`. |
 
-### `GET /healthz`
-- **Purpose**: Liveness probe.
-- **Auth**: Public.
-- **Response**: `{"status": "ok", "timestamp": float}`
+Error codes in use: `unauthorized`, `session_expired`, `invalid_credentials`, `weak_password`,
+`invalid_token`, `csrf_failed`, `reauth_required`, `forbidden`, `not_found`, `precondition_failed`,
+`idempotency_mismatch`, `conflict`, `locked`, `duplicate_application`, `invalid_transition`,
+`preflight_failed`, `payload_changed`, `approval_invalid`, `confirmation_required`, `resume_required`,
+`undo_unavailable`, `grounding_failed`, `no_confirmed_facts`, `invalid_category`, `upload_rejected`,
+`invalid_file`, `parse_failed`, `invalid_row`, `fetch_blocked`, `fetch_failed`, `invalid_feed`,
+`unknown_source`, `missing_param`, `invalid_source_params`, `source_disabled`, `invalid_cursor`,
+`not_pending`, `session_completed`, `bad_request`, `unprocessable`, `rate_limited`.
 
-### `GET /readyz`
-- **Purpose**: Readiness probe reporting dependencies and active LLM provider.
-- **Auth**: Public. 
-- **Response**: `{"status": "ready", "environment": "development", "llm_provider": "mock", "timestamp": float}`
+## Example: the core journey with curl
 
----
+```bash
+B=http://localhost:8080; J=cookies.txt
+CSRF=$(curl -s -c $J $B/api/auth/csrf | python -c "import sys,json;print(json.load(sys.stdin)['csrf_token'])")
+H=(-b $J -c $J -H "X-CSRF-Token: $CSRF" -H "Content-Type: application/json")
 
-## 2. Authentication & Session Management
+curl -s "${H[@]}" $B/api/auth/register -d '{"email":"me@example.com","password":"Sup3rSecurePass"}'
+curl -s "${H[@]}" $B/api/consents -d '{"purpose":"ai_processing","granted":true}'
+curl -s -b $J -c $J -H "X-CSRF-Token: $CSRF" -F file=@resume.pdf $B/api/resumes          # -> candidate facts
+curl -s "${H[@]}" $B/api/facts/status -d '{"fact_ids":["<id>", "..."],"status":"confirmed"}'
+curl -s "${H[@]}" -H "Idempotency-Key: imp-1" $B/api/jobs/import/manual_paste -d '{"text":"<job description>"}'
+curl -s -b $J $B/api/jobs/<job_id>                                                          # match + explanation
+APP=$(curl -s "${H[@]}" $B/api/applications -d '{"job_id":"<job_id>"}' | python -c "import sys,json;print(json.load(sys.stdin)['id'])")
+curl -s "${H[@]}" -X POST $B/api/applications/$APP/prepare                                  # grounded resume + cover letter
+curl -s "${H[@]}" -X POST $B/api/applications/$APP/ready
+HASH=$(curl -s "${H[@]}" -X POST $B/api/applications/$APP/request-approval | python -c "import sys,json;print(json.load(sys.stdin)['payload_hash'])")
+curl -s "${H[@]}" $B/api/applications/$APP/approve -d "{\"payload_hash\":\"$HASH\"}"
+curl -s "${H[@]}" -X POST $B/api/applications/$APP/handoff                                  # returns the employer URL; nothing is submitted
+curl -s "${H[@]}" $B/api/applications/$APP/confirm-submission -d '{"confirmed":true}'      # only now: submitted_confirmed
+```
 
-### `POST /api/v1/auth/register`
-- **Purpose**: Create candidate account with Argon2id password hash.
-- **Auth**: Public.
-- **Request Body**:
-  ```json
-  {
-    "email": "user@example.com",
-    "password": "SecurePassword123!",
-    "full_name": "Elena Rostova"
-  }
-  ```
-- **Response (201 Created)**: Returns access/refresh tokens and sets HttpOnly cookies.
+### Selected response shapes
 
-### `POST /api/v1/auth/login`
-- **Purpose**: Authenticate user and issue JWT token pair.
-- **Auth**: Public.
-- **Request Body**: `{"email": "...", "password": "..."}`
-- **Response (200 OK)**: `{"access_token": "...", "token_type": "bearer", "csrf_token": "..."}`
+`GET /api/jobs/{id}` (abridged):
 
-### `POST /api/v1/auth/logout`
-- **Purpose**: Invalidate current session and clear HttpOnly cookies.
-- **Auth**: Authenticated.
+```json
+{
+  "id": "…", "title": "Machine Learning Engineer", "company": "Nimbus AI",
+  "match": {"score": 88.1, "confidence": 1.0, "eligible": true, "recommended_action": "apply"},
+  "match_detail": {
+    "breakdown": {"components": {"skills": {"value": 0.93, "status": "known", "weight": 0.4, "contribution": 37.4, "detail": "8/8 required and 1/3 preferred skills verified"}},
+                  "filters": [{"name": "location", "passed": true, "reason": "…"}]},
+    "explanation": {"fit_reasons": ["…"], "matched_skills": ["Python"], "missing_or_uncertain": ["Related (not identical) skills: Kubernetes"],
+                    "projects_to_highlight": ["<fact_id>"], "questions_to_investigate": ["What is the salary range?"], "recommended_action": "apply"},
+    "config_snapshot": {"version": "match-config@1", "weights": {"skills": 0.4, "experience": 0.2, "education": 0.1, "preferences": 0.2, "semantic": 0.1}}
+  },
+  "scam_report": {"level": "none", "confidence": 0, "summary": "No common scam signals detected. This is not a guarantee of legitimacy.", "signals": []}
+}
+```
 
-### `GET /api/v1/auth/me`
-- **Purpose**: Retrieve current authenticated user details and profile.
-- **Auth**: Authenticated (Bearer or Cookie).
+Generated document item: `{"id": "…", "section": "experience", "kind": "claim", "text": "…", "supporting_fact_ids": ["<fact_id>"]}`.
+Grounding report: `{"passed": true, "checked": 11, "failed": 0, "items": {"<item_id>": {"passed": true, "reasons": []}}, "validator": "deterministic@1"}`.
 
----
+Analytics rates: `{"n": 22, "successes": 6, "rate": 0.273, "ci_low": 0.13, "ci_high": 0.48, "insufficient_data": false, "min_n": 20}` (Wilson 95% interval).
 
-## 3. Profile & Atomic Facts (Truth over Polish)
+## Endpoints
 
-### `GET /api/v1/profile`
-- **Purpose**: Fetch candidate profile details.
-- **Auth**: Authenticated.
+### health
 
-### `PUT /api/v1/profile`
-- **Purpose**: Update candidate headline, target roles, location preferences, and target salary.
-- **Auth**: Authenticated.
+| Method | Path |
+|---|---|
+| GET | `/healthz` |
+| GET | `/readyz` |
 
-### `GET /api/v1/facts`
-- **Purpose**: List candidate's atomic ProfileFacts with optional status filter.
-- **Query Params**: `confirmation_status` (`candidate` or `confirmed`).
-- **Auth**: Authenticated.
+### auth
 
-### `POST /api/v1/facts`
-- **Purpose**: Create a new atomic profile fact directly.
-- **Request Body**:
-  ```json
-  {
-    "text": "Architected distributed caching layer serving 10k RPS.",
-    "category": "experience",
-    "confirmation_status": "confirmed",
-    "entities": {"metrics": ["10k RPS"]}
-  }
-  ```
+| Method | Path |
+|---|---|
+| GET | `/api/auth/csrf` |
+| POST | `/api/auth/register` |
+| POST | `/api/auth/login` |
+| POST | `/api/auth/refresh` |
+| POST | `/api/auth/logout` |
+| GET | `/api/auth/me` |
+| POST | `/api/auth/verify-email` |
+| POST | `/api/auth/request-verification` |
+| POST | `/api/auth/forgot-password` |
+| POST | `/api/auth/reset-password` |
+| POST | `/api/auth/reauth` |
+| GET | `/api/auth/dev-mailbox` |
 
-### `POST /api/v1/facts/{fact_id}/confirm`
-- **Purpose**: Human confirmation gate: moves fact from `candidate` to `confirmed`, making it usable downstream.
-- **Auth**: Authenticated.
+### profile
 
-### `DELETE /api/v1/facts/{fact_id}`
-- **Purpose**: Delete fact (strictly tenant-isolated).
+| Method | Path |
+|---|---|
+| GET | `/api/profile` |
+| PATCH | `/api/profile` |
+| GET | `/api/consents` |
+| POST | `/api/consents` |
+| GET | `/api/resumes` |
+| POST | `/api/resumes` |
+| DELETE | `/api/resumes/{resume_id}` |
+| GET | `/api/facts` |
+| POST | `/api/facts` |
+| PATCH | `/api/facts/{fact_id}` |
+| DELETE | `/api/facts/{fact_id}` |
+| POST | `/api/facts/status` |
+| GET | `/api/skills` |
 
----
+### jobs
 
-## 4. Resumes & Grounded Studio
+| Method | Path |
+|---|---|
+| GET | `/api/jobs` |
+| GET | `/api/jobs/failed-imports` |
+| POST | `/api/jobs/failed-imports/{item_id}/resolve` |
+| GET | `/api/jobs/{job_id}` |
+| POST | `/api/jobs/import/file` |
+| POST | `/api/jobs/import/email` |
+| POST | `/api/jobs/import/{source}` |
+| GET | `/api/sources` |
+| PUT | `/api/sources/{source_id}` |
+| POST | `/api/jobs/bulk` |
+| POST | `/api/jobs/{job_id}/reverify` |
+| POST | `/api/jobs/{job_id}/scam-feedback` |
+| POST | `/api/matches/rescore` |
+| GET | `/api/saved-filters` |
+| PUT | `/api/saved-filters` |
 
-### `POST /api/v1/resumes/upload`
-- **Purpose**: Hardened resume upload (magic byte verification, 10MB ceiling, text parsing). Decomposes parsed claims into `candidate` ProfileFacts.
-- **Request**: Multipart `file`.
-- **Response (201 Created)**: Parsed metadata, extracted skills count, candidate facts count.
+### documents
 
-### `GET /api/v1/resumes`
-- **Purpose**: List candidate resumes.
+| Method | Path |
+|---|---|
+| GET | `/api/documents` |
+| POST | `/api/documents` |
+| GET | `/api/documents/{doc_id}` |
+| PUT | `/api/documents/{doc_id}` |
+| DELETE | `/api/documents/{doc_id}` |
+| GET | `/api/documents/{doc_id}/export` |
 
-### `POST /api/v1/resumes/{resume_id}/tailor`
-- **Purpose**: Generate tailored resume for a target job with structured diff view and fact grounding validation.
-- **Request Body**: `{"target_job_id": "...", "version_name": "Optional label"}`
-- **Response (201 Created)**: Tailored content, diff view (summary changes, skill reordering, bullet adjustments), cited fact IDs, grounding score.
+### applications
 
-### `POST /api/v1/resumes/cover-letter`
-- **Purpose**: Generate 3-paragraph structured cover letter (Hook, Evidence from confirmed facts, Why company / Close) citing verified `fact_id`s.
-- **Request Body**: `{"target_job_id": "..."}`
+| Method | Path |
+|---|---|
+| GET | `/api/applications` |
+| POST | `/api/applications` |
+| GET | `/api/applications/{app_id}` |
+| PATCH | `/api/applications/{app_id}/notes` |
+| POST | `/api/applications/{app_id}/prepare` |
+| PUT | `/api/applications/{app_id}/documents` |
+| POST | `/api/applications/{app_id}/ready` |
+| POST | `/api/applications/{app_id}/request-approval` |
+| POST | `/api/applications/{app_id}/approve` |
+| POST | `/api/applications/{app_id}/handoff` |
+| POST | `/api/applications/{app_id}/confirm-submission` |
+| POST | `/api/applications/{app_id}/move` |
+| POST | `/api/applications/{app_id}/undo` |
+| POST | `/api/applications/{app_id}/screening` |
+| PUT | `/api/applications/{app_id}/screening/{answer_id}` |
+| POST | `/api/applications/{app_id}/reminders` |
+| GET | `/api/reminders` |
+| POST | `/api/reminders/{reminder_id}/done` |
+| GET | `/api/interviews` |
 
-### `POST /api/v1/resumes/validate-grounding`
-- **Purpose**: Standalone deterministic grounding validator. Flags invented metrics, unlisted employers, unlisted degrees, and unsupported technologies.
-- **Request Body**: `{"claims": [{"text": "...", "cited_fact_ids": ["..."]}]}`
-- **Response**: `{"is_grounded": bool, "grounding_score": float, "violations": []}`
+### insights
 
-### `GET /api/v1/resumes/versions/{version_id}/export/pdf`
-- **Purpose**: Stream clean ATS-compliant single-column PDF resume (ReportLab).
-- **Headers**: `Content-Disposition: attachment; filename="resume_{id}.pdf"`
+| Method | Path |
+|---|---|
+| POST | `/api/triage/upload` |
+| GET | `/api/triage` |
+| POST | `/api/triage/{email_id}/accept` |
+| POST | `/api/triage/{email_id}/dismiss` |
+| POST | `/api/triage/{email_id}/import-jobs` |
+| GET | `/api/interview-prep/bank` |
+| POST | `/api/interview-prep/star` |
+| GET | `/api/interview-prep/sessions` |
+| POST | `/api/interview-prep/sessions` |
+| GET | `/api/interview-prep/sessions/{session_id}` |
+| POST | `/api/interview-prep/sessions/{session_id}/answers` |
+| GET | `/api/analytics` |
 
-### `GET /api/v1/resumes/versions/{version_id}/export/docx`
-- **Purpose**: Stream clean ATS-compliant single-column DOCX resume (python-docx).
+### account
 
----
-
-## 5. Job Ingestion & Matching
-
-### `GET /api/v1/jobs`
-- **Purpose**: List ingested jobs with optional search and pagination.
-- **Query Params**: `limit`, `offset`, `search`.
-
-### `GET /api/v1/jobs/{job_id}`
-- **Purpose**: Get job details and source compliance attribution.
-
-### `POST /api/v1/jobs/import/file`
-- **Purpose**: Ingest job listings from uploaded CSV, JSON, or `.eml` MIME alert. Uses SHA-256 fingerprinting for idempotent deduplication.
-
-### `POST /api/v1/jobs/import/url`
-- **Purpose**: SSRF-protected job ingestion from permitted direct URL. Validates DNS against RFC 1918, loopback, and cloud metadata IPs before fetching.
-
-### `POST /api/v1/jobs/import/greenhouse`
-- **Purpose**: Fetch live public candidate board listings via Greenhouse ATS API.
-
-### `POST /api/v1/jobs/{job_id}/match`
-- **Purpose**: Two-stage explainable match engine (Hard filters -> 0-100 weighted scoring) with unknown handling and confirmed fact citations.
-- **Response**: `{"score": float, "confidence": float, "hard_filter_passed": bool, "explanation": {...}}`
-
----
-
-## 6. Applications & Human-in-the-Loop Workflow
-
-### `POST /api/v1/applications`
-- **Purpose**: Create tracked job application in `saved` state. Strictly blocks duplicate applications to the same job (409 Conflict).
-- **Request Body**: `{"job_id": "...", "notes": "..."}`
-
-### `GET /api/v1/applications`
-- **Purpose**: List tracked applications with optional `?status=` filter.
-
-### `GET /api/v1/applications/{app_id}`
-- **Purpose**: Full application details, materials payload, cryptographic approval status, and append-only activity audit trail.
-
-### `PATCH /api/v1/applications/{app_id}`
-- **Purpose**: Update materials (resume version, cover letter, notes). **Critical invariant**: modifying payload immediately invalidates any active approval and reverts status to `ready_for_review`.
-
-### `POST /api/v1/applications/{app_id}/approve`
-- **Purpose**: Human approval gate: user confirms submission package. Computes SHA-256 payload hash and records immutable `ApprovalRecord`. Status advances to `approved`.
-- **Request Body**: `{"confirmed_by_user": true}`
-
-### `POST /api/v1/applications/{app_id}/transition`
-- **Purpose**: Safe state transition through orchestrator state machine.
-- **States**: `saved` -> `preparing` -> `ready_for_review` -> `approved` -> `submitting` -> `submitted_confirmed` -> `interviewing` -> `offer` / `rejected` / `withdrawn`.
-- **Request Body**: `{"target_status": "submitted_confirmed", "confirmed_by_user": true, "notes": "..."}`
-
-### `GET /api/v1/applications/reminders`
-- **Purpose**: Surfaces automated follow-up reminders for submitted applications (e.g. 7 days post-submission).
-
----
-
-## 7. Email Triage, Scam Signals & Statistical Analytics
-
-### `POST /api/v1/triage/email`
-- **Purpose**: Upload `.eml` email for intent classification (`interview_invite`, `rejection`, `offer`, `assessment_request`, `status_update`, `marketing_or_other`). Returns suggested tracker update with confidence. Zero automated replies.
-
-### `POST /api/v1/jobs/{job_id}/scam-check`
-- **Purpose**: Probabilistic scam & predatory signals audit (payment requests, chat apps, freemail domains, outlier salary). Returns transparent evidence list without silent blocking.
-
-### `GET /api/v1/interview-prep/{job_id}`
-- **Purpose**: Generate STAR-format answer scaffolds strictly citing confirmed candidate facts, plus reverse questions for interviewer.
-
-### `GET /api/v1/analytics/funnel`
-- **Purpose**: SQL-backed application conversion funnel and Wilson score confidence intervals for honest statistical reporting on small candidate sample sizes.
+| Method | Path |
+|---|---|
+| GET | `/api/settings` |
+| PATCH | `/api/settings` |
+| POST | `/api/privacy/export` |
+| POST | `/api/privacy/delete-account` |
+| GET | `/api/notifications` |
+| POST | `/api/notifications/read-all` |
+| GET | `/api/integrations` |
+| DELETE | `/api/integrations/{integration_id}` |
+| GET | `/api/dashboard` |

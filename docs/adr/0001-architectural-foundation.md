@@ -1,43 +1,18 @@
-# ADR-001: Architectural Foundation and Technology Stack
+# ADR-0001: Architectural foundation
 
-## Status
-Accepted
+- **Status:** accepted · 2026-10-28
 
 ## Context
-JobPilot AI requires a robust, compliance-first, human-in-the-loop architecture designed to assist candidates with high fidelity, ground truth enforcement, and auditability. The system processes resumes, job postings, semantic embeddings, and application lifecycle states while strictly preventing unapproved external actions or hallucinations.
+The spec (§3) asks for a React SPA, a FastAPI backend layered router → service → repository,
+agents, adapters, Postgres, a worker and Docker Compose.
 
-## Decisions
-
-1. **Backend Language & Framework**:
-   - Python 3.12+ with FastAPI.
-   - Pydantic v2 for data contracts and validation.
-   - SQLAlchemy 2.x async ORM with PostgreSQL 16.
-   - Alembic for strict migration control.
-   - Layered architecture: `router (thin) -> service (business rules) -> repository (data access)`.
-   - Explicit agent isolation: Agents interact with business services, never raw database sessions directly.
-
-2. **Frontend Framework & Styling**:
-   - React 18+ with TypeScript (strict mode enabled).
-   - Vite for build tooling.
-   - Tailwind CSS for design system tokenization.
-   - TanStack Query (React Query) for server-state caching, React Router for navigation, React Hook Form + Zod for client-side contract validation.
-
-3. **Storage & Vectors**:
-   - PostgreSQL 16 with `pgvector` extension for semantic embedding storage and HNSW index retrieval.
-   - Redis for caching, rate limiting, and background queue broker.
-
-4. **AI & Grounding Isolation**:
-   - Server-side only AI calls through an abstract `LLMProvider` interface.
-   - Implementations for Gemini, OpenAI, and a deterministic `MockProvider` for test isolation.
-   - Grounding Validator enforces that generated claims cite verified atomic `ProfileFact` IDs.
-
-5. **Security & Human-in-the-loop**:
-   - User approval records hashed with payload content.
-   - Automated checks against cross-tenant data leaks (all queries scoped by `user_id`).
-   - Strict SSRF protections on job URL imports.
+## Decision
+- Monorepo: `apps/api` (FastAPI, SQLAlchemy 2 async, Alembic), `apps/web` (Vite + React + TS strict), `infra`, `docs`, `evals`, `packages/contracts`.
+- Same-origin deployment: nginx serves the SPA and proxies `/api` (Vite proxies in dev). Cookies are first-party; the SPA doesn't depend on CORS.
+- All user-owned data access goes through one `Repo` class that injects `user_id`, so tenancy is enforced in one place.
+- Agents live in one module (`app/agents/__init__.py`) rather than one package each: they are thin typed wrappers over services, and one module keeps the shared timeout/retry base in view.
+- One Alembic baseline migration (`0001`). Later schema changes get new revisions.
+- SQLite (aiosqlite) for local development and the default test run; PostgreSQL 16 in Compose and CI. The same suite runs on both (`TEST_DATABASE_URL`).
 
 ## Consequences
-- Clean separation of concerns with verifiable type contracts.
-- Rapid local execution using Docker Compose or local Python/Node runners.
-- Zero client-side AI key exposure.
-- Fully reproducible test runs without live third-party API dependencies.
+Easy to run locally without Docker. Postgres-only features (RLS, pgvector, trigram indexes) are avoided or emulated so behaviour matches on both; see ADR-0002 and ADR-0004.

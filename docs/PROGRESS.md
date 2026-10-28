@@ -1,89 +1,26 @@
-# JobPilot AI — Progress & Milestone Tracking
+# Progress
 
-This document tracks progress against the milestones defined in `jobpilot-ai-advanced-prompt.md`.
+Milestones from the build spec (§17). Evidence for every gate is in [STATUS.md](STATUS.md).
 
----
+| M | Deliverable | Gate | State |
+|---|---|---|---|
+| M0 | Scaffold, Compose, CI, ADR-001, threat model | `docker compose up` healthy; CI config | ✅ Compose verified locally; CI not yet run on GitHub |
+| M1 | Schema + migrations, auth, profile, onboarding, authz sweep | Migrations up/down clean; auth and isolation tests | ✅ SQLite and Postgres |
+| M2 | Design system, shell, dashboard | Component tests; a11y basics | ✅ tokens, light/dark, keyboard paths (no Storybook, no axe in CI) |
+| M3 | Resume upload/parse/confirm, ProfileFacts | Fixture resumes parse; unconfirmed facts unusable | ✅ |
+| M4 | Job import, dedup, freshness | Dedup and SSRF tests; idempotent re-import | ✅ (public boards not live-verified) |
+| M5 | Matching, explanations, eval harness | Eval metrics; unknown-handling tests | ✅ (synthetic eval) |
+| M6 | Resume Studio, cover letters, grounding, export | Hallucination fixtures blocked; PDF/DOCX export | ✅ |
+| M7 | Application workflow, approvals, tracker, reminders | Submitted requires confirmation; duplicate apply blocked | ✅ |
+| M8 | Email triage, interview prep, scam signals, analytics | Analytics match SQL ground truth | ✅ (uploaded email only; no OAuth) |
+| M9 | Hardening, E2E, docs, demo seed, audit | Full suite green; quickstart | ✅ locally; CI pending first push |
 
-## Milestone Checklist
+## Assumptions
 
-- [x] **M0: Repository Scaffold, Compose, CI, ADR-001, Threat Model Draft**
-  - [x] Workspace initialized (Git, .gitignore)
-  - [x] Monorepo layout created (`apps/api`, `apps/web`, `packages/contracts`, `docs/`, `evals/`, `infra/`)
-  - [x] Docker Compose setup (`api`, `web`, `postgres` with pgvector, `redis`)
-  - [x] Environment config templates (`.env.example`)
-  - [x] Root Makefile & tooling configuration (`ruff`, `mypy`, `pytest`, `npm` scripts)
-  - [x] CI workflow definition (GitHub Actions)
-  - [x] ADR-001: Architectural Foundation and Stack Selection
-  - [x] `docs/threat-model.md` draft (STRIDE per component)
-  - [x] Exit Gate Verification: Lint/tests green & container configurations verified
+- Single-user-per-account, personal scale: in-process rate limits and a polling worker are enough.
+- The Mock provider is the default, so the product works fully without any AI key.
+- Source terms were reviewed on 2026-10-28 and must be re-checked before wider use.
 
-- [x] **M1: Database Schema + Migrations, Auth, Profile, Onboarding, Authz Sweep**
-  - [x] SQLAlchemy 2.x async models for all core entities (UUIDv7/UUID, audit constraints, relationships)
-  - [x] Alembic migration environment and initial migration (clean up/down proven)
-  - [x] Argon2id password hashing + HttpOnly cookies + CSRF protection
-  - [x] User onboarding, profile, education, experience, and atomic ProfileFacts
-  - [x] Automated cross-user authorization sweep tests (assert 403/404 on cross-tenant access)
-  - [x] Exit Gate Verification: Migrations up/down clean; auth & isolation tests pass (11 tests green)
+## Known gaps
 
-- [x] **M2: Design System + Shell + Dashboard Skeletons**
-  - [x] React + Vite + TypeScript (strict) setup with Tailwind CSS
-  - [x] Accessible UI component foundation (shadcn-style tokens, dark/light theme, WCAG 2.2 AA)
-  - [x] App Shell: Navigation, header, user profile switch, status indicators
-  - [x] Dashboard, Jobs, Tracker, Resume Studio, Analytics, Settings views
-  - [x] Exit Gate Verification: Component gallery at /gallery, 6 RTL component unit tests green, Vite production bundle clean
-
-- [x] **M3: Resume Upload/Parse/Confirm + ProfileFacts**
-  - [x] Resume upload endpoint with magic-byte/MIME validation and size caps
-  - [x] Resume parser (extracting raw text, skills, and section metadata)
-  - [x] ProfileFact decomposition and verification lifecycle (`candidate` → `confirmed`)
-  - [x] Frontend Resume Studio view for reviewing and confirming atomic facts
-  - [x] Exit Gate Verification: Fixture resumes parse; unconfirmed facts strictly unusable downstream (verified by test)
-
-- [x] **M4: Job Import, Source Adapters, Dedup, Freshness**
-  - [x] JobSourceAdapter protocol and Compliance Registry (`docs/sources.md`)
-  - [x] Permitted source adapters (Greenhouse public board, URL/Paste, CSV/JSON, .eml)
-  - [x] SSRF defense (blocking private, loopback, link-local, cloud metadata IPs) and HTML sanitizer
-  - [x] Cryptographic SHA-256 fingerprinting pipeline and idempotent dedup
-  - [x] Exit Gate Verification: Dedup & SSRF test suite passed; idempotent re-import proven (16 tests green)
-
-- [x] **M5: Matching Engine + Explanations + Eval Harness**
-  - [x] Two-stage matching: Deterministic hard filters + weighted scoring (0–100)
-  - [x] Separate confidence metric and unknown handling
-  - [x] Structured explanation payload (`fit_reasons`, `matched_skills`, `missing_or_uncertain`, etc.)
-  - [x] Eval dataset (>=50 labeled synthetic pairs) and metrics runner (precision@k, NDCG)
-  - [x] Exit Gate Verification: Eval metrics pass; unknown-handling tests pass (18 tests green)
-
-- [x] **M6: Resume Studio + Cover Letters + Grounding Validator + Export**
-  - [x] Grounding validator (deterministic entity & quantifier check against confirmed `fact_id`s)
-  - [x] LLM tailored resume & cover letter generation citing `fact_id`s
-  - [x] Diff view with provenance annotations
-  - [x] PDF and DOCX clean export generation (ReportLab & python-docx)
-  - [x] Exit Gate Verification: Hallucination fixtures blocked; export files validate (23 tests green)
-
-- [x] **M7: Application Workflow + Approvals + Tracker + Reminders**
-  - [x] Orchestrator state machine for applications with strict transition guards
-  - [x] ApprovalRecord cryptographic payload hashing (invalidates on change)
-  - [x] Human confirmation requirement for final submission state
-  - [x] Tracker views: Kanban + Table with keyboard accessibility and undo toasts
-  - [x] Activity audit logs and reminder scheduler
-  - [x] Exit Gate Verification: Cannot reach submitted without confirmation; duplicate-apply blocked (27 tests green)
-
-- [x] **M8: Email Triage, Interview Prep, Scam Signals, Analytics**
-  - [x] Uploaded .eml triage classifier generating suggested tracker updates
-  - [x] Interview prep question bank and STAR-format answer scaffolds from verified facts
-  - [x] Probabilistic scam/quality signal engine with transparent evidence
-  - [x] SQL-backed analytics with Wilson confidence intervals, sample sizes, and disclaimers
-  - [x] Exit Gate Verification: Analytics match SQL ground truth on seeded data (33 tests green)
-
-- [x] **M9: Hardening, E2E, Docs, Demo Seed, Final Audit**
-  - [x] Demo seed script with clearly labeled `DEMO` data (profile + 30 jobs) (`scripts/seed_demo_data.py`)
-  - [x] Comprehensive E2E tests covering full user journey (`test_e2e_journey.py`)
-  - [x] Final documentation suite (`architecture.md`, `threat-model.md`, `api.md`, `sources.md`, `STATUS.md`)
-  - [x] Security scan and clean quickstart verification (`make demo`, `docker-compose.yml`)
-  - [x] Exit Gate Verification: Full CI green (40 total automated tests passing); fresh-clone quickstart runnable in < 15 min
-
----
-
-## Assumptions & Decisions Log
-*See `docs/adr/` for complete Architecture Decision Records.*
-- **ADR-001**: Initial Monorepo Structure & Core Stack Choice.
+See "Partially implemented" and "Not implemented" in STATUS.md.

@@ -1,82 +1,124 @@
-# JobPilot AI — Honest Self-Audit & System Status (STATUS.md)
+# Status report
 
-**System Version**: 1.0.0  
-**Verification Date**: 2026-10-11  
-**Total Automated Tests**: 40 tests (34 Backend Pytest + 6 Frontend Vitest), 100% passing.
+Build of 2026-10-28. Every result below was produced on this build; commands and output excerpts
+are included. "Not live-verified" means the code path exists and is tested with mocks, but it has
+never run against the real third-party service.
 
----
+## Definition of Done (§19) — checked end to end
 
-## 1. What is Production-Grade
+The Playwright journey (`apps/web/e2e/journey.spec.ts`) drives the real UI and API through:
+register → onboarding (consent, profile, preferences) → upload resume → confirm facts → import a job
+(paste) → scored, explained match → tailor (grounded resume + cover letter) → edit in Resume Studio,
+save, re-check, export PDF → mark ready → pre-flight → approve (payload hash) → hand-off → explicit
+confirmation → tracker shows it in *Applied* → analytics show 1 submitted with "Insufficient data" rates.
+It passes against both a fresh local stack (SQLite, inline tasks) and the Docker Compose stack
+(Postgres 16, separate worker, nginx).
 
-The following subsystems meet or exceed full production criteria with zero mock stubs, high test coverage, strict invariants, and explicit threat mitigation:
+## Implemented
 
-1. **Security & Authentication Foundation**:
-   - **Password Hashing**: Argon2id (`argon2-cffi`) with state-of-the-art memory and time cost parameters.
-   - **Session Security**: JWT access/refresh token architecture issued in HttpOnly, SameSite, Secure cookies alongside double-submit CSRF protection.
-   - **Tenant Isolation**: Cross-tenant IDOR sweep verified across all entities (`User`, `ProfileFact`, `Resume`, `ResumeVersion`, `Job`, `Application`). Users cannot view, modify, or delete foreign records.
-   - **Upload Hardening**: Real MIME verification + file magic-byte enforcement (`%PDF-`, `PK\x03\x04`, UTF-8 text) with strict 10MB ceiling and non-executable storage paths.
-   - **SSRF Defense (`ssrf_protector.py`)**: Pre-request DNS resolution blocking IPv4/IPv6 loopback, RFC 1918 private subnets, cloud metadata (`169.254.169.254`), non-HTTP schemes, with redirects checked before dispatch.
+**P0**
+- Auth: Argon2id, email verification and password reset (single-use, hashed, expiring tokens; dev mailbox instead of SMTP), HttpOnly cookie sessions with rotating refresh tokens and reuse detection, CSRF double-submit, throttling with exponential lockout, re-auth for sensitive actions.
+- Onboarding wizard (resumable via `onboarding_step`): consent → about you → preferences → resume → confirm facts.
+- Resume upload (PDF/DOCX/TXT) with hardened validation; parsing into **candidate** ProfileFacts; only **confirmed** facts are used downstream (tested).
+- Job import: paste, URL (SSRF-guarded, robots.txt), CSV/JSON, `.eml`/`.mbox` alert emails, RSS, and the Greenhouse/Lever/Ashby public board APIs. Fingerprint dedup (`UNIQUE(user_id, job_fingerprint)`) plus a trigram "potential duplicate" flag; idempotent re-import; failed-import list; freshness/re-verification.
+- Matching: hard filters, then a weighted 0–100 score with separate confidence; unknown ≠ match; explanation object; config snapshot per match; re-score.
+- Resume Studio and cover letters: every claim cites fact ids; deterministic grounding validator; keyword classification (supported / adjacent / unsupported); editor with re-check; diff with per-line provenance; PDF and DOCX export, blocked while anything fails grounding.
+- Application workflow: state machine with gated transitions, pre-flight checks, screening-question classification (sensitive questions never auto-answered), approval bound to a payload hash (invalidated on change), manual hand-off, explicit submission confirmation, append-only history, duplicate-apply blocked.
+- Tracker: Kanban (drag and drop plus a keyboard/screen-reader "Move to…" menu), table view, undo toast, notes with `If-Match`, reminders.
+- Analytics computed from stored records: funnel with drop-off, response/interview/offer rates with Wilson 95% CIs and an `n < 20` "insufficient data" threshold, time-to-response distribution, by source, score band vs interview rate, weekly submissions, non-causality note, DEMO data excluded unless opted in.
+- Docker Compose (postgres, api, worker, web), `.env.example` with every variable documented, Makefile, README, demo seed script.
 
-2. **Compliance & Grounding Core**:
-   - **Zero Scraping Invariant**: Zero automated scraping of prohibited job boards (LinkedIn, Indeed). Only permitted adapters (public Greenhouse ATS, direct user URLs, CSV/JSON, `.eml` MIME alerts).
-   - **Truth Over Polish**: Every atomic `ProfileFact` derived from uploaded resumes defaults to `confirmation_status = 'candidate'`. Unconfirmed facts are strictly unusable downstream until explicitly confirmed by the candidate.
-   - **Deterministic Grounding Validator (`grounding_validator.py`)**: 100% deterministic entity, quantifier, and metric verification. Disallows any resume bullet or cover letter paragraph lacking a confirmed `fact_id` citation. Successfully blocks 100% of synthetic temptation-to-hallucinate claims (metrics, fake employers, fake degrees, unsupported tech).
-   - **Cryptographic Approval Gates**: Applications cannot reach `submitted_confirmed` without an explicit human confirmation and an active `ApprovalRecord` containing the SHA-256 hash of the exact submission package. Any alteration of the package immediately invalidates the approval and reverts status to `ready_for_review`.
+**P1 (partly)**
+- Interview prep: question bank by type, STAR scaffolds built only from confirmed facts, mock interview sessions with rubric scoring (relevance, structure, specificity, clarity) and a progress chart.
+- Scam/quality signals: rule engine with severity, evidence, probabilistic language and a "report false positive" action.
+- Email triage of uploaded emails: classification with evidence, suggested tracker updates that need acceptance, draft replies (copy only, never sent).
+- In-app notifications and reminders (via the worker); PDF/DOCX export.
 
-3. **ATS Document Exporters**:
-   - **Clean PDF & DOCX Generation**: Programmatic generation via `reportlab` and `python-docx` using standard single-column typography, standard margins, and zero layout tables.
-   - **Text Round-Trip Integrity**: Automated tests verify that `pypdf` and `python-docx` extract candidate name, verified metrics, and experience bullets with zero data loss.
+**Platform**
+- Error envelope, request ids, PII-redacting JSON logs, `/healthz` and `/readyz`, security headers, cursor pagination, ETags, Idempotency-Key, transactional outbox, per-adapter feature flags (env and per user), per-user and global AI token budgets with graceful degradation, AI usage log, versioned prompt files, output filter, circuit breaker.
+- Privacy: consent records, full export (JSON + files, ZIP), verified hard deletion with a report, retention purge of AI usage logs and processed outbox events.
 
-4. **Statistical Honesty & Explainability**:
-   - **Wilson Score Intervals**: Conversion and response rates calculated with 95% Wilson confidence intervals. Small sample sizes ($n < 30$) include prominent statistical disclaimers, avoiding misleading single-digit percentages.
-   - **Transparent Scam Signals**: Multi-signal scam detector (check cashing, chat app interviews, enterprise freemail, outlier salary) outputs transparent evidence logs; never a silent block.
+## Partially implemented
 
----
+| Item | What exists | What's missing |
+|---|---|---|
+| OpenAI / Gemini providers | Implemented against the public APIs, behind the same validation, repair and fallback path as Mock | **Not live-verified** (no API keys used) |
+| Greenhouse / Lever / Ashby / RSS | Implemented; tested with mocked HTTP responses | **Not live-verified** against the real services |
+| Upload sandboxing | Size/type/magic/macro/zip-bomb/PDF-active-content checks; parsing in a thread with a timeout | No OS-level sandbox process, no ClamAV |
+| Rate limiting | Per IP, per user, per expensive endpoint | In-memory per process (see ADR-0003) |
+| Frontend API types | OpenAPI exported; request types generated | Response types hand-written (ADR-0007) |
+| Semantic matching | 10% semantic component from stored embeddings | JSON vectors with Python cosine, no pgvector/HNSW (ADR-0004) |
+| Accessibility | Labels, focus-visible, modal focus trap, skip link, keyboard Kanban alternative, live regions, reduced motion, AA-contrast tokens in both themes | No automated axe audit in CI |
 
-## 2. What is Prototype / Baseline
+## Not implemented (with reasons)
 
-The following components function correctly and pass automated exit gates, but have natural headroom for production scaling:
+| Item | Tier | Reason |
+|---|---|---|
+| Gmail / Outlook OAuth ingestion | P1 | Needs OAuth client registration and credentials; `.eml`/`.mbox` upload covers the flow. The UI lists them as unavailable. |
+| pgvector + HNSW; semantic search | P1 | Deferred (ADR-0004) |
+| Postgres Row-Level Security | — | Optional per spec; tenancy enforced in `Repo` (ADR-0002) |
+| `assisted_fill` (Playwright form filling) and `api_submit` | P2 / spec | No permitted submission API; assisted fill needs a local agent (ADR-0005) |
+| Company career-page adapters, n8n hooks, preference learning, i18n | P2 | Out of time |
+| Automated `ENCRYPTION_KEY` re-wrap command | — | Manual procedure documented in the runbook |
+| Pre-commit hooks, Storybook | — | CI runs the same lint/type/test gates; there is no component gallery page |
+| Redis / Celery | — | Replaced by the DB outbox worker (ADR-0003) |
 
-1. **AI Provider Backends**:
-   - The system implements a clean `LLMProvider` Protocol with three swappable backends: `MockProvider`, `GeminiProvider`, and `OpenAIProvider`.
-   - In offline test and CI environments, `MockProvider` operates deterministically. In live staging with API keys configured, `GeminiProvider` and `OpenAIProvider` invoke remote models with strict temperature zero and prompt formatting.
-   - *Headroom*: Local fine-tuned SLM fallbacks (e.g., Llama 3.2 3B or Gemma 2 2B running via ONNX or Ollama) for zero-network offline deployments.
+## Manual setup needed
 
-2. **Greenhouse Adapter Coverage**:
-   - Ingests public candidate boards for Greenhouse (`https://boards-api.greenhouse.io/v1/boards/{token}/jobs`).
-   - *Headroom*: Additional permitted adapters for Lever, Workday Candidate Portal, and Ashby public boards.
+- Real deployments: set strong `JWT_SECRET` and `ENCRYPTION_KEY`, set `APP_ENV=production` (forces Secure cookies, rejects the dev secret) and serve over HTTPS.
+- To use a real AI provider, set `LLM_PROVIDER` plus its API key, then verify it yourself (see "Partially implemented").
+- No SMTP is wired: verification and reset emails go to the dev mailbox (`GET /api/auth/dev-mailbox`, disabled in production). Production needs a mail sender before email verification is usable.
+- Re-check each source's terms before enabling it for other people (`docs/sources.md`).
 
-3. **Background Worker Architecture**:
-   - Currently, follow-up reminders and scheduled tasks run synchronously or via lightweight background async tasks.
-   - *Headroom*: Integrating Celery or ARQ with Redis for high-concurrency multi-worker task queuing in distributed enterprise environments.
+## Known risks
 
----
+- Email delivery is not implemented, so password reset in production has no delivery channel.
+- Scam signals are heuristics; false negatives are possible. The UI says so.
+- The matching evaluation uses a **synthetic** dataset whose tiers were constructed, so near-perfect scores say little about real-world ranking quality.
+- In-memory rate limits and the polling worker suit a single instance (personal scale).
 
-## 3. What Was Deliberately Deferred (By Design)
+## Verification commands and results
 
-1. **Automated Headless Web Scraping of Anti-Scrape Sites**:
-   - **Reasoning**: Deliberately rejected to maintain strict compliance with Computer Fraud and Abuse Act (CFAA), Terms of Service, and ethical AI standards. Bypassing bot protections (Cloudflare, CAPTCHAs) is an anti-goal.
-   - **Alternative Implemented**: Official ATS APIs, direct URL paste with user consent, CSV/JSON bulk import, and `.eml` email alert triage.
+All run on Windows 11, Python 3.12, Node 22.16, Docker 29.7.
 
-2. **Fully Autonomous One-Click Job Submissions**:
-   - **Reasoning**: Violates the core Human-in-the-Loop philosophy. Blind mass-applying degrades candidate credibility, increases spam, and exposes candidates to legal liability for ungrounded claims.
-   - **Alternative Implemented**: Structured review package with cryptographic SHA-256 signing and explicit human confirmation before advancing to `submitted_confirmed`.
+```text
+$ cd apps/api && .venv/Scripts/python -m pytest -q --cov=app            # SQLite
+165 passed in 137.88s
+TOTAL  4940 stmts  369 missed  93%
+  services + agents: 2773 stmts, 174 missed → 93.7%   (target ≥ 85%)
+  state_machine 100% · grounding 98% · matching 99% · auth_service 96% · security/* 84–100%
 
----
+$ TEST_DATABASE_URL=postgresql+asyncpg://…/jp_test pytest -q --ignore=tests/test_migrations.py   # Postgres 16
+163 passed in 203.59s          (test_migrations.py is SQLite-specific; Postgres migrations checked below)
 
-## 4. Test Suite & Verification Matrix
+$ alembic upgrade head && alembic downgrade base && alembic upgrade head   # on Postgres 16
+Running upgrade  -> 0001 · Running downgrade 0001 -> · Running upgrade  -> 0001   (30 tables)
 
-| Milestone | Subsystem | Automated Verification File | Status |
-| :--- | :--- | :--- | :--- |
-| **M0** | Scaffolding, Compose, CI, Health | `test_health.py` | ✅ Passed |
-| **M1** | Database Schema, Argon2 Auth, Tenant Isolation | `test_auth.py`, `test_authz_isolation.py`, `test_profile.py`, `test_facts.py`, `test_migrations.py` | ✅ Passed |
-| **M2** | Design System, Web Shell, UI Primitives | `smoke.test.ts`, `components.test.tsx` (Vitest) | ✅ Passed |
-| **M3** | Hardened Resume Upload, Fact Parsing | `test_resume_upload_and_parse.py` | ✅ Passed |
-| **M4** | Job Import, SSRF Defense, SHA-256 Dedup | `test_job_import_and_dedup.py` | ✅ Passed |
-| **M5** | Explainable Matching, NDCG Eval Harness | `test_matching_and_eval.py` | ✅ Passed |
-| **M6** | Grounding Validator, Tailored Diffs, ATS PDF/DOCX | `test_resume_studio_and_grounding.py` | ✅ Passed |
-| **M7** | State Machine, Cryptographic Approvals, Reminders | `test_application_workflow.py` | ✅ Passed |
-| **M8** | Email Triage, Scam Signals, Wilson CI Analytics | `test_email_triage_scam_and_analytics.py` | ✅ Passed |
-| **M9** | Full Journey E2E Integration, Demo Seed | `test_e2e_journey.py`, `scripts/seed_demo_data.py` | ✅ Passed |
+$ ruff check app tests alembic scripts      → All checks passed!
+$ ruff format --check app tests alembic scripts → all files already formatted
+$ mypy app                                   → Success: no issues found in 57 source files
 
-**Overall Gate Status**: **ALL MILESTONES (M0 through M9) COMPLETE & GREEN.**
+$ python evals/matching/runner.py            # synthetic, labelled dataset
+{"pairs": 60, "precision_at_5": 1.0, "ndcg_at_10": 1.0, "spearman": 0.998}
+
+$ cd apps/web && npm run typecheck           → no errors (tsc strict)
+$ npm test                                   → Test Files 3 passed · Tests 10 passed
+$ npm run build                              → ✓ built (route-level chunks; largest is recharts at 108 kB gzip)
+
+$ E2E_CHANNEL=chrome npx playwright test     # own API (SQLite, mock AI) + Vite
+2 passed — full user journey; unauthenticated redirect
+
+$ docker compose up --build -d               # postgres, api, worker, web
+api healthy · postgres healthy · web healthy · worker started
+GET /api/readyz → {"status":"ready","database":"ok","ai_provider":"mock"}
+$ E2E_BASE_URL=http://localhost:8088 E2E_CHANNEL=chrome npx playwright test
+2 passed
+$ docker compose exec api python -m scripts.seed_demo
+Imported 30 DEMO jobs. Created 6 DEMO applications (5 through the full approval + confirmation flow).
+```
+
+The CI workflow (`.github/workflows/ci.yml`) runs these gates plus `pip-audit`, `npm audit` and
+gitleaks. It has not run on GitHub yet, because nothing has been pushed.
+
+Playwright's bundled Chromium couldn't be downloaded on the build machine, so local E2E runs used the
+installed Chrome (`E2E_CHANNEL=chrome`). CI installs the bundled browser.
