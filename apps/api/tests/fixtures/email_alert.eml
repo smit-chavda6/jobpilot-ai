@@ -1,0 +1,8 @@
+From: Job Alerts <alerts@jobboard.example>
+To: alex.rivera@example.com
+Subject: 3 new jobs for Data Scientist
+Date: Tue, 27 Oct 2026 08:00:00 +0530
+Message-ID: <alert-001@jobboard.example>
+Content-Type: text/html; charset=utf-8
+
+<html><body><p>New jobs matching your alert:</p><a href="https://jobs.example.org/view/1">Senior Data Scientist at Umbrella Corp</a><br><a href="https://jobs.example.org/view/2">ML Engineer - Stark Industries</a><br><a href="https://jobs.example.org/view/3">Analytics Lead | Wayne Enterprises</a><br><a href="https://jobs.example.org/unsubscribe">Unsubscribe</a></body></html>

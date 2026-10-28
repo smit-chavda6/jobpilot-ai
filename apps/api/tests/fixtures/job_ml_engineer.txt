@@ -1,0 +1,18 @@
+Machine Learning Engineer at Nimbus AI
+Location: Bengaluru, India (Hybrid)
+Full-time
+
+About the role
+Nimbus AI is hiring a Machine Learning Engineer to build and deploy production ML systems.
+
+Requirements
+- 3+ years of experience in machine learning or data science
+- Strong Python and SQL
+- Experience with scikit-learn or PyTorch
+- Experience deploying models with Docker on AWS
+- Bachelor's degree in Computer Science, Statistics or related field
+
+Nice to have
+- Airflow, Kubernetes, MLOps experience
+
+Salary: ₹25 LPA - ₹40 LPA

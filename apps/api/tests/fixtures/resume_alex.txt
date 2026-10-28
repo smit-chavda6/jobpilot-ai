@@ -1,0 +1,29 @@
+Alex Rivera
+alex.rivera@example.com | +91 98765 43210 | Bengaluru, India
+
+SUMMARY
+Data scientist with 4 years of experience building machine learning models and data pipelines in Python.
+
+EXPERIENCE
+Data Scientist — Acme Analytics (Jan 2022 – Present)
+- Built a customer churn prediction model using Python, scikit-learn and XGBoost that improved retention campaign precision by 18%.
+- Designed Airflow pipelines that process 2 million events per day into PostgreSQL.
+- Deployed models as FastAPI services in Docker on AWS.
+
+Junior Data Analyst — Northwind Retail (Jun 2020 – Dec 2021)
+- Automated weekly sales reporting with SQL and Pandas, saving 6 hours per week.
+- Created Tableau dashboards for 12 regional managers.
+
+PROJECTS
+Resume Matcher (2023)
+- Built an NLP pipeline with Hugging Face transformers to rank job postings against resumes.
+
+EDUCATION
+M.Sc. Data Science, University of Hyderabad (2018 – 2020)
+B.Sc. Statistics, Christ University (2015 – 2018)
+
+SKILLS
+Python, SQL, Pandas, scikit-learn, XGBoost, PyTorch, Airflow, Docker, AWS, Tableau, Statistics
+
+CERTIFICATIONS
+AWS Certified Cloud Practitioner (2023)

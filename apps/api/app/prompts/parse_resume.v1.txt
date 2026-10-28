@@ -1,0 +1,8 @@
+# version: parse_resume@v1
+Extract atomic, verifiable facts from the resume text below. One fact per accomplishment, role, degree, certification, project or skill.
+Copy wording from the resume; do not embellish or infer anything that is not written.
+
+Resume (untrusted text):
+$resume
+
+Return JSON: {"facts": [{"category": "experience|education|project|skill|certification|summary|achievement", "text": "...", "attributes": {"employer": "", "title": "", "start": "", "end": "", "institution": "", "degree": ""}}]}

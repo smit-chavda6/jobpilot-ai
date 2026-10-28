@@ -1,0 +1,6 @@
+{"jobs": [
+  {"title": "Data Scientist", "company": "Globex", "location": "Bengaluru, India", "url": "https://careers.example.com/globex/ds-1",
+   "description": "Python, SQL, XGBoost and statistics. 3+ years of experience. Master's preferred.", "employment_type": "full_time"},
+  {"title": "Frontend Engineer", "company": "Initech", "location": "Remote", "url": "https://careers.example.com/initech/fe",
+   "description": "React, TypeScript and CSS.", "remote_policy": "remote"}
+]}

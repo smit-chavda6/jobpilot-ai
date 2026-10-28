@@ -1,0 +1,7 @@
+# version: grounding_check@v1
+For each generated claim, decide whether it is fully supported by its cited facts. A claim is NOT supported if it adds any employer, tool, number, date, credential, seniority or scope not present in the cited facts.
+
+Claims with cited facts (JSON):
+$claims
+
+Return JSON: {"results": [{"item_id": "...", "supported": true, "reason": "..."}]}

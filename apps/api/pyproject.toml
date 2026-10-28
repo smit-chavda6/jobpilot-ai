@@ -1,0 +1,89 @@
+[project]
+name = "jobpilot-api"
+version = "1.0.0"
+description = "JobPilot AI - compliance-first, human-in-the-loop job-search assistant (API + worker)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.32.1",
+    "pydantic==2.10.4",
+    "pydantic-settings==2.7.0",
+    "email-validator==2.2.0",
+    "sqlalchemy[asyncio]==2.0.36",
+    "aiosqlite==0.20.0",
+    "asyncpg==0.30.0",
+    "alembic==1.14.0",
+    "argon2-cffi==23.1.0",
+    "pyjwt==2.10.1",
+    "cryptography==44.0.0",
+    "httpx==0.28.1",
+    "python-multipart==0.0.20",
+    "pypdf==5.1.0",
+    "python-docx==1.1.2",
+    "reportlab==4.2.5",
+    "nh3==0.2.20",
+    "defusedxml==0.7.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-asyncio==0.25.0",
+    "pytest-cov==6.0.0",
+    "hypothesis==6.123.0",
+    "ruff==0.8.4",
+    "mypy==1.14.0",
+]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC"]
+ignore = ["S101", "S311", "B008", "S105", "S106"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"]
+known-first-party = ["app"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "B", "E501"]
+"alembic/*" = ["E501"]
+"scripts/*" = ["E501", "S"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+strict = false
+
+[[tool.mypy.overrides]]
+module = [
+    "app.services.state_machine",
+    "app.services.grounding",
+    "app.services.matching",
+    "app.services.fingerprint",
+    "app.services.analytics_math",
+    "app.security.*",
+]
+strict = true
+
+[tool.coverage.run]
+source = ["app"]
+concurrency = ["greenlet", "thread"]
+omit = ["app/ai/openai_provider.py", "app/ai/gemini_provider.py"]

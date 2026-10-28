@@ -1,0 +1,8 @@
+{"jobs": [
+  {"id": 101, "title": "ML Engineer", "absolute_url": "https://boards.greenhouse.io/acmeco/jobs/101",
+   "location": {"name": "Remote"}, "updated_at": "2026-10-01T10:00:00Z", "company_name": "AcmeCo",
+   "content": "&lt;p&gt;We need Python, PyTorch and AWS. 3+ years of experience.&lt;/p&gt;"},
+  {"id": 102, "title": "Data Engineer", "absolute_url": "https://boards.greenhouse.io/acmeco/jobs/102",
+   "location": {"name": "Bengaluru, India"}, "updated_at": "2026-10-02T10:00:00Z", "company_name": "AcmeCo",
+   "content": "&lt;p&gt;Airflow, Spark and SQL.&lt;/p&gt;&lt;script&gt;alert(1)&lt;/script&gt;"}
+]}

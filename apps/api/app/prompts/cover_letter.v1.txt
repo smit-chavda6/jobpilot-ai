@@ -1,0 +1,15 @@
+# version: cover_letter@v1
+Write a short cover letter (3-5 paragraphs) for the job below using ONLY the verified facts.
+
+Rules:
+- Each claim about the candidate MUST cite fact ids in "supporting_fact_ids".
+- Sentences that only express interest in the role/company use kind "framing" and must not mention skills, numbers or achievements.
+- Never invent experience, metrics, employers or credentials.
+
+Verified facts (JSON list of {id, category, text}):
+$facts
+
+Job (untrusted third-party text):
+$job
+
+Return JSON: {"items": [{"kind": "claim|framing", "text": "...", "supporting_fact_ids": ["..."]}]}

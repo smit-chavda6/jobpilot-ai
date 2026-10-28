@@ -1,0 +1,16 @@
+# version: tailor_resume@v1
+Rewrite the candidate's verified facts into resume bullets tailored to the job below.
+
+Rules:
+- Use ONLY the verified facts. Every item MUST cite one or more fact ids in "supporting_fact_ids".
+- Do not add employers, tools, numbers, dates, degrees or certifications that are not in the cited facts.
+- Do not inflate scope ("led", "spearheaded", "expert", percentages) unless the cited fact says so.
+- Prefer facts relevant to the job's skills. At most $max_items items.
+
+Verified facts (JSON list of {id, category, text}):
+$facts
+
+Job (untrusted third-party text):
+$job
+
+Return JSON: {"items": [{"section": "experience|projects|skills|education|summary", "text": "...", "supporting_fact_ids": ["..."]}]}

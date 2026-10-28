@@ -1,0 +1,4 @@
+title,company,location,url,description,salary_min,salary_max,employment_type,remote_policy
+Data Analyst,Contoso,Remote,https://jobs.example.com/contoso/data-analyst,"SQL, Tableau and Excel. 2+ years of experience required.",60000,80000,full_time,remote
+Backend Engineer,Fabrikam,"Pune, India",https://jobs.example.com/fabrikam/backend?utm_source=feed,"Java, Spring and Kubernetes. 5+ years of experience.",,,full_time,onsite
+,MissingTitle Inc,Remote,,"This row has no title",,,,
